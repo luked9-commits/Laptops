@@ -137,7 +137,12 @@ function createTable() {
     document.getElementById("app").innerHTML = html;
 }
 
-createTable();
+async function init() {
+    await loadBookings();  // get sheet data first
+    createTable();         // then build UI
+}
+
+window.onload = init;
 </script>
 
 </body>
