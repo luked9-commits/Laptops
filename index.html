@@ -65,6 +65,8 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
 function confirmBooking(btn) {
+    console.log("CONFIRM CLICKED");
+
     const cell = btn.closest(".cell-box");
     const room = cell.querySelector("select").value;
     const name = cell.querySelector("input").value;
@@ -74,16 +76,29 @@ function confirmBooking(btn) {
         return;
     }
 
-fetch(SCRIPT_URL, {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        room: room,
-        name: name
+    console.log("ABOUT TO SEND REQUEST");
+
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            room: room,
+            name: name
+        })
     })
-})
+    .then(res => res.text())
+    .then(data => console.log("Saved:", data))
+    .catch(err => console.error("Error:", err));
+
+    cell.innerHTML = `
+        <div class="locked">
+            ${room}<br>
+            ${name}
+        </div>
+    `;
+}
 .then(res => res.text())
 .then(data => console.log("Saved:", data))
 .catch(err => console.error("Error:", err));
