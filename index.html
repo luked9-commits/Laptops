@@ -166,7 +166,7 @@ function getBooking(week, day, period, room) {
 ------------------------- */
 
 
-    async function confirmBooking(btn, week, day, period, room) {
+    function confirmBooking(btn, week, day, period, room) {
     const cell = btn.closest(".cell-box");
     const name = cell.querySelector("input").value;
 
@@ -175,7 +175,20 @@ function getBooking(week, day, period, room) {
         return;
     }
 
-    await fetch(SCRIPT_URL, {
+    // ⚡ instant UI update
+    cell.innerHTML = `
+        <div class="locked">
+            ${room}<br>
+            ${name}
+            <button class="delete-btn"
+                onclick="deleteBooking('${week}','${day}','${period}','${room}')">
+                ✕
+            </button>
+        </div>
+    `;
+
+    // 🔄 background sync (no waiting)
+    fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
             week,
@@ -184,11 +197,7 @@ function getBooking(week, day, period, room) {
             room,
             name
         })
-    });
-
-    // 🔥 IMPORTANT: reload from source of truth
-    await loadBookings();
-    createTable();
+    }).catch(err => console.error("Save failed:", err));
 }
 
 /* -------------------------
@@ -287,6 +296,17 @@ function createTable() {
 ------------------------- */
     function deleteBooking(week, day, period, room) {
 
+    // ✅ 1. INSTANT UI UPDATE
+    bookings = bookings.filter(b =>
+        !(b.week == week &&
+          b.day == day &&
+          b.period == period &&
+          b.room == room)
+    );
+
+    createTable();
+
+    // ✅ 2. BACKGROUND SYNC
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
@@ -296,21 +316,7 @@ function createTable() {
             period,
             room
         })
-    })
-    .then(() => {
-        console.log("Deleted");
-
-        // remove from local state
-        bookings = bookings.filter(b =>
-            !(b.week == week &&
-              b.day == day &&
-              b.period == period &&
-              b.room == room)
-        );
-
-        createTable();
-    })
-    .catch(err => console.error("Delete failed:", err));
+    }).catch(err => console.error("Delete failed:", err));
 }
 /* -------------------------
    INIT
