@@ -59,6 +59,28 @@
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
+let bookings = [];
+
+/* ---------------------------
+   LOAD BOOKINGS FROM SHEETS
+----------------------------*/
+async function loadBookings() {
+    try {
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
+
+        bookings = data || [];
+
+        console.log("Loaded bookings:", bookings);
+    } catch (err) {
+        console.error("Load error:", err);
+        bookings = [];
+    }
+}
+
+/* ---------------------------
+   SAVE BOOKING
+----------------------------*/
 function confirmBooking(btn) {
     const cell = btn.closest(".cell-box");
     const room = cell.querySelector("select").value;
@@ -71,16 +93,13 @@ function confirmBooking(btn) {
 
     fetch(SCRIPT_URL, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
         body: new URLSearchParams({
             room: room,
             name: name
         })
     })
-    .then(() => console.log("SENT TO SHEETS"))
-    .catch(err => console.error("ERROR:", err));
+    .then(() => console.log("Saved to Sheets"))
+    .catch(err => console.error("Error:", err));
 
     cell.innerHTML = `
         <div class="locked">
@@ -90,7 +109,28 @@ function confirmBooking(btn) {
     `;
 }
 
-function createCell() {
+/* ---------------------------
+   RENDER CELL
+----------------------------*/
+function isBooked(room) {
+    return bookings.some(b => b.room === room);
+}
+
+function getName(room) {
+    const found = bookings.find(b => b.room === room);
+    return found ? found.name : "";
+}
+
+function createCell(roomKey) {
+    if (isBooked(roomKey)) {
+        return `
+            <div class="locked">
+                ${roomKey}<br>
+                ${getName(roomKey)}
+            </div>
+        `;
+    }
+
     return `
         <div class="cell-box">
             <select>
@@ -104,6 +144,9 @@ function createCell() {
     `;
 }
 
+/* ---------------------------
+   BUILD TABLE
+----------------------------*/
 function createTable() {
     let html = "";
 
@@ -123,11 +166,11 @@ function createTable() {
         for (let p = 1; p <= 5; p++) {
             html += `<tr>
                 <th>${p}</th>
-                <td>${createCell()}</td>
-                <td>${createCell()}</td>
-                <td>${createCell()}</td>
-                <td>${createCell()}</td>
-                <td>${createCell()}</td>
+                <td>${createCell("Room 13")}</td>
+                <td>${createCell("Room 18")}</td>
+                <td>${createCell("Room 13")}</td>
+                <td>${createCell("Room 18")}</td>
+                <td>${createCell("Room 13")}</td>
             </tr>`;
         }
 
@@ -137,15 +180,12 @@ function createTable() {
     document.getElementById("app").innerHTML = html;
 }
 
-    async function loadBookings() {
-    const res = await fetch(SCRIPT_URL);
-    const data = await res.json();
-    console.log("BOOKINGS:", data);
-}
-    
+/* ---------------------------
+   INIT (IMPORTANT)
+----------------------------*/
 async function init() {
-    await loadBookings();  // get sheet data first
-    createTable();         // then build UI
+    await loadBookings();
+    createTable();
 }
 
 window.onload = init;
