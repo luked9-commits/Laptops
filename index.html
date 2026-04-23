@@ -103,6 +103,13 @@ button {
 .cell-box:hover {
     background: #f5f5f5;
 }
+
+thead th {
+    position: sticky;
+    top: 0;
+    background: #f7f7f7;
+    z-index: 10;
+}
     
 </style>
 </head>
@@ -266,36 +273,43 @@ function createTable() {
     for (let week = 1; week <= 11; week++) {
         html += `<h2>Week ${week}</h2>`;
 
-        html += `<table>
-            <tr>
-                <th>Period</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-            </tr>`;
+        html += `
+        <table>
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                </tr>
+            </thead>
+            <tbody>
+        `;
 
         for (let period = 1; period <= 5; period++) {
-    html += `<tr>
-        <th>${period}</th>`;
+            html += `<tr>
+                <th>${period}</th>`;
 
-    for (let d = 0; d < days.length; d++) {
-        const day = days[d];
+            for (let d = 0; d < days.length; d++) {
+                const day = days[d];
+
+                html += `
+                    <td>
+                        ${createCell(week, day, period, "Room 13")}
+                        <hr>
+                        ${createCell(week, day, period, "Room 18")}
+                    </td>
+                `;
+            }
+
+            html += `</tr>`;
+        }
 
         html += `
-            <td>
-                ${createCell(week, day, period, "Room 13")}
-                <hr>
-                ${createCell(week, day, period, "Room 18")}
-            </td>
-        `;
-    }
-
-    html += `</tr>`;
-}
-
-        html += `</table>`;
+            </tbody>
+        </table>`;
     }
 
     document.getElementById("app").innerHTML = html;
