@@ -139,14 +139,7 @@ async function loadBookings() {
         bookings = [];
     }
 }
-function isBooked(week, day, period, room) {
-    return bookings.some(b =>
-        b.week === week &&
-        b.day === day &&
-        b.period === period &&
-        b.room === room
-    );
-}
+
 /* -------------------------
    CHECK BOOKINGS
 ------------------------- */
@@ -225,14 +218,7 @@ function createCell(week, day, period, room) {
     }
 
     // ✅ EMPTY CELL (THIS IS THE NEW PART)
-    return `
-        <div class="cell-box"
-            onclick="startBooking(this, ${week}, '${day}', ${period}, '${room}')">
-            <div class="placeholder">+</div>
-        </div>
-    `;
-}
-
+    
     return `
         <div class="cell-box">
             <input type="text" placeholder="Your name">
