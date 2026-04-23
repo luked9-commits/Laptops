@@ -65,12 +65,21 @@ let bookings = [];
    LOAD BOOKINGS
 ------------------------- */
 async function loadBookings() {
-    const res = await fetch(SCRIPT_URL);
-    bookings = await res.json();
+    try {
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
+
+        bookings = Array.isArray(data) ? data : [];
+
+        console.log("Loaded bookings:", bookings);
+    } catch (err) {
+        console.error("Load failed:", err);
+        bookings = [];
+    }
 }
 
 /* -------------------------
-   CHECK IF BOOKED
+   CHECK BOOKINGS
 ------------------------- */
 function isBooked(week, day, period, room) {
     return bookings.some(b =>
@@ -122,7 +131,7 @@ function confirmBooking(btn, week, day, period) {
 }
 
 /* -------------------------
-   CELL RENDER
+   CELL
 ------------------------- */
 function createCell(week, day, period, room) {
 
@@ -149,7 +158,7 @@ function createCell(week, day, period, room) {
 }
 
 /* -------------------------
-   TABLE BUILDER
+   TABLE
 ------------------------- */
 function createTable() {
     let html = "";
@@ -192,27 +201,9 @@ function createTable() {
 /* -------------------------
    INIT
 ------------------------- */
-async function loadBookings() {
-    try {
-        const res = await fetch(SCRIPT_URL);
-
-        const data = await res.json();
-
-        bookings = Array.isArray(data) ? data : [];
-
-        console.log("Loaded bookings:", bookings);
-    } catch (err) {
-        console.error("Load failed:", err);
-        bookings = [];
-    }
-}
-
 async function init() {
     await loadBookings();
     createTable();
-}
-
-window.onload = init;
 }
 
 window.onload = init;
