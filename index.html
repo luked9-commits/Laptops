@@ -57,7 +57,7 @@ select, input, button {
 <div id="app"></div>
 
 <script>
-const SCRIPT_URL = "YOUR_WEB_APP_URL_HERE";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
 let bookings = [];
 
@@ -192,9 +192,27 @@ function createTable() {
 /* -------------------------
    INIT
 ------------------------- */
+async function loadBookings() {
+    try {
+        const res = await fetch(SCRIPT_URL);
+
+        const data = await res.json();
+
+        bookings = Array.isArray(data) ? data : [];
+
+        console.log("Loaded bookings:", bookings);
+    } catch (err) {
+        console.error("Load failed:", err);
+        bookings = [];
+    }
+}
+
 async function init() {
     await loadBookings();
     createTable();
+}
+
+window.onload = init;
 }
 
 window.onload = init;
