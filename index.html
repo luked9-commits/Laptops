@@ -184,11 +184,29 @@ function confirmBooking(btn, week, day, period, room) {
         })
     });
 
-    cell.innerHTML = `
-        <div class="locked">
-            ${room}<br>${name}
-        </div>
-    `;
+    async function confirmBooking(btn, week, day, period, room) {
+    const cell = btn.closest(".cell-box");
+    const name = cell.querySelector("input").value;
+
+    if (!name) {
+        alert("Enter name");
+        return;
+    }
+
+    await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new URLSearchParams({
+            week,
+            day,
+            period,
+            room,
+            name
+        })
+    });
+
+    // 🔥 IMPORTANT: reload from source of truth
+    await loadBookings();
+    createTable();
 }
 
 /* -------------------------
