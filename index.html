@@ -159,10 +159,20 @@ function createCell(week, day, period, room) {
             ${room}<br>
             ${booking.name}
             <br>
-            <button style="color:white;background:red;border:none;padding:4px 8px;cursor:pointer"
-                onclick="deleteBooking('${week}','${day}','${period}','${room}')">
-                ✖
-            </button>
+            <button onclick="deleteBooking('${week}','${day}','${period}','${room}')"
+    style="
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 12px;
+        line-height: 1;
+        cursor: pointer;
+        margin-top: 4px;
+    ">
+    ✖
+</button>
         </div>
     `;
 }
