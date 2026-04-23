@@ -1,9 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Senior Laptop Booking</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    h1 { margin-bottom: 20px; }
+    h2 { margin-top: 30px; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
+
+    th, td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    th {
+        background: #f0f0f0;
+    }
+
+    .cell-box {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    select, input, button {
+        padding: 5px;
+        width: 100%;
+    }
+
+    .locked {
+        background: #d4edda;
+        padding: 6px;
+        border: 1px solid #333;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Term 2 Senior Laptop Booking</h1>
+
+<div id="app"></div>
+
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
 function confirmBooking(btn) {
-    console.log("CLICKED");
-
     const cell = btn.closest(".cell-box");
     const room = cell.querySelector("select").value;
     const name = cell.querySelector("input").value;
@@ -12,8 +68,6 @@ function confirmBooking(btn) {
         alert("Please select a room and enter your name.");
         return;
     }
-
-    console.log("SENDING");
 
     fetch(SCRIPT_URL, {
         method: "POST",
@@ -25,8 +79,8 @@ function confirmBooking(btn) {
             name: name
         })
     })
-    .then(() => console.log("SENT"))
-    .catch(err => console.error("FAILED", err));
+    .then(() => console.log("SENT TO SHEETS"))
+    .catch(err => console.error("ERROR:", err));
 
     cell.innerHTML = `
         <div class="locked">
@@ -55,29 +109,26 @@ function createTable() {
 
     for (let week = 1; week <= 11; week++) {
         html += `<h2>Week ${week}</h2>`;
-        html += `
-        <table>
+
+        html += `<table>
             <tr>
                 <th>Period</th>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
-            </tr>
-        `;
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+            </tr>`;
 
         for (let p = 1; p <= 5; p++) {
-            html += `
-            <tr>
+            html += `<tr>
                 <th>${p}</th>
                 <td>${createCell()}</td>
                 <td>${createCell()}</td>
                 <td>${createCell()}</td>
                 <td>${createCell()}</td>
                 <td>${createCell()}</td>
-            </tr>
-            `;
+            </tr>`;
         }
 
         html += `</table>`;
@@ -88,3 +139,6 @@ function createTable() {
 
 createTable();
 </script>
+
+</body>
+</html>
