@@ -160,9 +160,7 @@ function getBooking(week, day, period, room) {
 /* -------------------------
    SEND BOOKING
 ------------------------- */
-
-
-    function confirmBooking(btn, week, day, period, room) {
+function confirmBooking(btn, week, day, period, room) {
     const cell = btn.closest(".cell-box");
     const name = cell.querySelector("input").value;
 
@@ -172,30 +170,18 @@ function getBooking(week, day, period, room) {
     }
 
     // ⚡ instant UI update
-    async function confirmBooking(btn, week, day, period, room) {
-    const cell = btn.closest(".cell-box");
-    const name = cell.querySelector("input").value;
+    cell.innerHTML = `
+        <div class="locked">
+            ${room}<br>
+            ${name}
+            <button class="delete-btn"
+                onclick="deleteBooking('${week}','${day}','${period}','${room}')">
+                ✕
+            </button>
+        </div>
+    `;
 
-    if (!name) return;
-
-    await fetch(SCRIPT_URL, {
-        method: "POST",
-        body: new URLSearchParams({
-            week, day, period, room, name
-        })
-    });
-
-    await loadBookings();
-    createTable();
-}
-bookings.push({
-    week: Number(week),
-    day,
-    period: Number(period),
-    room,
-    name
-});
-    // 🔄 background sync (no waiting)
+    // 🔄 background save
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
@@ -207,6 +193,7 @@ bookings.push({
         })
     }).catch(err => console.error("Save failed:", err));
 }
+
 
 /* -------------------------
    CELL
