@@ -69,15 +69,27 @@ async function loadBookings() {
         const res = await fetch(SCRIPT_URL);
         const data = await res.json();
 
-        bookings = Array.isArray(data) ? data : [];
+        bookings = data.map(b => ({
+            week: Number(b.week),
+            day: b.day,
+            period: Number(b.period),
+            room: b.room,
+            name: b.name
+        }));
 
-        console.log("Loaded bookings:", bookings);
     } catch (err) {
         console.error("Load failed:", err);
         bookings = [];
     }
 }
-
+function isBooked(week, day, period, room) {
+    return bookings.some(b =>
+        b.week === week &&
+        b.day === day &&
+        b.period === period &&
+        b.room === room
+    );
+}
 /* -------------------------
    CHECK BOOKINGS
 ------------------------- */
