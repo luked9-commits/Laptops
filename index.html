@@ -160,7 +160,8 @@ function getBooking(week, day, period, room) {
 /* -------------------------
    SEND BOOKING
 ------------------------- */
-function confirmBooking(btn, week, day, period, room) {
+
+    function confirmBooking(btn, week, day, period, room) {
     const cell = btn.closest(".cell-box");
     const name = cell.querySelector("input").value;
 
@@ -169,7 +170,7 @@ function confirmBooking(btn, week, day, period, room) {
         return;
     }
 
-    // ⚡ instant UI update
+    // ⚡ 1. INSTANT UI UPDATE
     cell.innerHTML = `
         <div class="locked">
             ${room}<br>
@@ -181,7 +182,16 @@ function confirmBooking(btn, week, day, period, room) {
         </div>
     `;
 
-    // 🔄 background save
+    // 🧠 2. UPDATE LOCAL STATE (THIS IS WHAT YOU ARE MISSING)
+    bookings.push({
+        week: Number(week),
+        day,
+        period: Number(period),
+        room,
+        name
+    });
+
+    // 🔄 3. SEND TO SHEETS IN BACKGROUND
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
