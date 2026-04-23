@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Senior Laptop Booking - Term 2</title>
+<title>Senior Laptop Booking</title>
 
 <style>
     body {
@@ -32,7 +32,7 @@
     }
 
     th {
-        background-color: #f0f0f0;
+        background: #f0f0f0;
     }
 
     .cell-box {
@@ -46,13 +46,9 @@
         width: 100%;
     }
 
-    button {
-        cursor: pointer;
-    }
-
     .locked {
-        padding: 6px;
         background: #d4edda;
+        padding: 6px;
         border: 1px solid #333;
         font-weight: bold;
     }
@@ -62,6 +58,8 @@
 <body>
 
 <h1>Term 2 Senior Laptop Booking</h1>
+
+<div id="app"></div>
 
 <script>
 function confirmBooking(btn) {
@@ -74,17 +72,15 @@ function confirmBooking(btn) {
         return;
     }
 
-    // SEND TO GOOGLE SHEETS
     fetch("https://script.google.com/macros/s/AKfycbwNJJFYxFTf7Q_s0Ffvk-QUE5p7mda6SQw8HXyt6CsYRfo1GdxYuLI6XQC6ZMUCB6uv/exec", {
         method: "POST",
         mode: "no-cors",
         body: new URLSearchParams({
-            room: room,
-            name: name
+            room,
+            name
         })
     });
 
-    // lock UI
     cell.innerHTML = `
         <div class="locked">
             ${room}<br>
@@ -101,18 +97,18 @@ function createCell() {
                 <option>Room 13</option>
                 <option>Room 18</option>
             </select>
-
             <input type="text" placeholder="Your name">
-
             <button onclick="confirmBooking(this)">Confirm</button>
         </div>
     `;
 }
 
-function createWeek(weekNumber) {
-    document.write(`<h2>Week ${weekNumber}</h2>`);
+function createTable() {
+    let html = "";
 
-    document.write(`
+    for (let week = 1; week <= 11; week++) {
+        html += `<h2>Week ${week}</h2>`;
+        html += `
         <table>
             <tr>
                 <th>Period</th>
@@ -122,10 +118,10 @@ function createWeek(weekNumber) {
                 <th>Thursday</th>
                 <th>Friday</th>
             </tr>
-    `);
+        `;
 
-    for (let p = 1; p <= 5; p++) {
-        document.write(`
+        for (let p = 1; p <= 5; p++) {
+            html += `
             <tr>
                 <th>${p}</th>
                 <td>${createCell()}</td>
@@ -134,15 +130,16 @@ function createWeek(weekNumber) {
                 <td>${createCell()}</td>
                 <td>${createCell()}</td>
             </tr>
-        `);
+            `;
+        }
+
+        html += `</table>`;
     }
 
-    document.write(`</table>`);
+    document.getElementById("app").innerHTML = html;
 }
 
-for (let i = 1; i <= 11; i++) {
-    createWeek(i);
-}
+createTable();
 </script>
 
 </body>
