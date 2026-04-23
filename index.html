@@ -9,19 +9,23 @@
         font-family: Arial, sans-serif;
         margin: 20px;
     }
+
     h2 {
         margin-top: 40px;
     }
+
     table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 30px;
     }
+
     th, td {
         border: 1px solid #333;
         padding: 8px;
         text-align: center;
     }
+
     th {
         background-color: #f0f0f0;
     }
@@ -37,51 +41,11 @@
         width: 95%;
     }
 
-    button {
-        cursor: pointer;
-    }
-
     .locked {
         background-color: #d4edda;
         font-weight: bold;
-    }
-</style>
-</head>
-
-<body>
-
-<h1>Term 2 Senior Laptop Booking</h1>
-
-<script>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Senior Laptop Booking</title>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-    }
-
-    .locked {
         padding: 6px;
-        background: #d4edda;
         border: 1px solid #333;
-        font-weight: bold;
-    }
-
-    .cell-box {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        padding: 5px;
-        border: 1px solid #ccc;
-    }
-
-    select, input, button {
-        padding: 5px;
     }
 </style>
 </head>
@@ -89,18 +53,6 @@
 <body>
 
 <h1>Term 2 Senior Laptop Booking</h1>
-
-<div class="cell-box">
-    <select>
-        <option value="">Select Room</option>
-        <option>Room 13</option>
-        <option>Room 18</option>
-    </select>
-
-    <input type="text" placeholder="Your name">
-
-    <button onclick="confirmBooking(this)">Confirm</button>
-</div>
 
 <script>
 function confirmBooking(btn) {
@@ -113,22 +65,17 @@ function confirmBooking(btn) {
         return;
     }
 
-    // SEND TO GOOGLE SHEETS
     fetch("https://script.google.com/macros/s/AKfycbwNJJFYxFTf7Q_s0Ffvk-QUE5p7mda6SQw8HXyt6CsYRfo1GdxYuLI6XQC6ZMUCB6uv/exec", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            room,
-            name
-        })
+        body: JSON.stringify({ room, name })
     })
     .then(res => res.text())
     .then(data => console.log("Saved:", data))
     .catch(err => console.error("Error:", err));
 
-    // lock UI
     cell.innerHTML = `
         <div class="locked">
             ${room}<br>
@@ -136,13 +83,24 @@ function confirmBooking(btn) {
         </div>
     `;
 }
-</script>
 
-</body>
-</html>
+function createCell() {
+    return `
+        <div class="cell-box">
+            <select>
+                <option value="">Select Room</option>
+                <option>Room 13</option>
+                <option>Room 18</option>
+            </select>
+            <input type="text" placeholder="Your name">
+            <button onclick="confirmBooking(this)">Confirm</button>
+        </div>
+    `;
+}
 
 function createWeek(weekNumber) {
     document.write(`<h2>Week ${weekNumber}</h2>`);
+
     document.write(`
         <table>
             <tr>
@@ -156,14 +114,16 @@ function createWeek(weekNumber) {
     `);
 
     for (let p = 1; p <= 5; p++) {
-        document.write(`<tr>
-            <th>${p}</th>
-            <td>${createCell()}</td>
-            <td>${createCell()}</td>
-            <td>${createCell()}</td>
-            <td>${createCell()}</td>
-            <td>${createCell()}</td>
-        </tr>`);
+        document.write(`
+            <tr>
+                <th>${p}</th>
+                <td>${createCell()}</td>
+                <td>${createCell()}</td>
+                <td>${createCell()}</td>
+                <td>${createCell()}</td>
+                <td>${createCell()}</td>
+            </tr>
+        `);
     }
 
     document.write(`</table>`);
