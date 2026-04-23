@@ -83,10 +83,10 @@ fetch(SCRIPT_URL, {
         room: room,
         name: name
     })
-});
-    .then(res => res.text())
-    .then(data => console.log("Saved:", data))
-    .catch(err => console.error("Error:", err));
+})
+.then(res => res.text())
+.then(data => console.log("Saved:", data))
+.catch(err => console.error("Error:", err));
 
     cell.innerHTML = `
         <div class="locked">
