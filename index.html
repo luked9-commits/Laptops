@@ -99,17 +99,6 @@ function confirmBooking(btn) {
         </div>
     `;
 }
-.then(res => res.text())
-.then(data => console.log("Saved:", data))
-.catch(err => console.error("Error:", err));
-
-    cell.innerHTML = `
-        <div class="locked">
-            ${room}<br>
-            ${name}
-        </div>
-    `;
-}
 
 function createCell() {
     return `
