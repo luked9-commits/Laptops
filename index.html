@@ -53,6 +53,8 @@
 <h1>Term 2 Senior Laptop Booking</h1>
 
 function confirmBooking(btn) {
+    console.log("BUTTON CLICKED");
+    
     const cell = btn.closest(".cell-box");
     const room = cell.querySelector("select").value;
     const name = cell.querySelector("input").value;
@@ -63,7 +65,7 @@ function confirmBooking(btn) {
     }
 
     // SEND TO GOOGLE SHEETS
-    fetch("https://script.google.com/macros/s/XXXX/exec", {
+    fetch("https://script.google.com/a/macros/education.nsw.gov.au/s/AKfycbyRFLIxYTLvnS9Z-OcJXfPORsVEE5_43YVyUwhzNtbdI1LfPJskFzs6-xdZ3X_B9y3EKA/exec", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
