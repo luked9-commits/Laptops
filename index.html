@@ -5,48 +5,48 @@
 <title>Senior Laptop Booking</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-    }
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
 
-    h1 { margin-bottom: 20px; }
-    h2 { margin-top: 30px; }
+h1 { margin-bottom: 20px; }
+h2 { margin-top: 30px; }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
 
-    th, td {
-        border: 1px solid #333;
-        padding: 8px;
-        text-align: center;
-        vertical-align: top;
-    }
+th, td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: center;
+    vertical-align: top;
+}
 
-    th {
-        background: #f0f0f0;
-    }
+th {
+    background: #f0f0f0;
+}
 
-    .cell-box {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
+.cell-box {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 
-    select, input, button {
-        padding: 5px;
-        width: 100%;
-    }
+select, input, button {
+    padding: 5px;
+    width: 100%;
+}
 
-    .locked {
-        background: #d4edda;
-        padding: 6px;
-        border: 1px solid #333;
-        font-weight: bold;
-    }
+.locked {
+    background: #d4edda;
+    padding: 6px;
+    border: 1px solid #333;
+    font-weight: bold;
+}
 </style>
 </head>
 
@@ -57,31 +57,43 @@
 <div id="app"></div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
+const SCRIPT_URL = "YOUR_WEB_APP_URL_HERE";
 
 let bookings = [];
 
-/* ---------------------------
-   LOAD BOOKINGS FROM SHEETS
-----------------------------*/
+/* -------------------------
+   LOAD BOOKINGS
+------------------------- */
 async function loadBookings() {
-    try {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
-
-        bookings = data || [];
-
-        console.log("Loaded bookings:", bookings);
-    } catch (err) {
-        console.error("Load error:", err);
-        bookings = [];
-    }
+    const res = await fetch(SCRIPT_URL);
+    bookings = await res.json();
 }
 
-/* ---------------------------
-   SAVE BOOKING
-----------------------------*/
-function confirmBooking(btn) {
+/* -------------------------
+   CHECK IF BOOKED
+------------------------- */
+function isBooked(week, day, period, room) {
+    return bookings.some(b =>
+        b.week == week &&
+        b.day == day &&
+        b.period == period &&
+        b.room == room
+    );
+}
+
+function getBooking(week, day, period, room) {
+    return bookings.find(b =>
+        b.week == week &&
+        b.day == day &&
+        b.period == period &&
+        b.room == room
+    );
+}
+
+/* -------------------------
+   SEND BOOKING
+------------------------- */
+function confirmBooking(btn, week, day, period) {
     const cell = btn.closest(".cell-box");
     const room = cell.querySelector("select").value;
     const name = cell.querySelector("input").value;
@@ -94,39 +106,31 @@ function confirmBooking(btn) {
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
-            room: room,
-            name: name
+            week,
+            day,
+            period,
+            room,
+            name
         })
-    })
-    .then(() => console.log("Saved to Sheets"))
-    .catch(err => console.error("Error:", err));
+    });
 
     cell.innerHTML = `
         <div class="locked">
-            ${room}<br>
-            ${name}
+            ${room}<br>${name}
         </div>
     `;
 }
 
-/* ---------------------------
-   RENDER CELL
-----------------------------*/
-function isBooked(room) {
-    return bookings.some(b => b.room === room);
-}
+/* -------------------------
+   CELL RENDER
+------------------------- */
+function createCell(week, day, period, room) {
 
-function getName(room) {
-    const found = bookings.find(b => b.room === room);
-    return found ? found.name : "";
-}
-
-function createCell(roomKey) {
-    if (isBooked(roomKey)) {
+    if (isBooked(week, day, period, room)) {
+        const b = getBooking(week, day, period, room);
         return `
             <div class="locked">
-                ${roomKey}<br>
-                ${getName(roomKey)}
+                ${room}<br>${b.name}
             </div>
         `;
     }
@@ -139,16 +143,18 @@ function createCell(roomKey) {
                 <option>Room 18</option>
             </select>
             <input type="text" placeholder="Your name">
-            <button onclick="confirmBooking(this)">Confirm</button>
+            <button onclick="confirmBooking(this, ${week}, '${day}', ${period})">Confirm</button>
         </div>
     `;
 }
 
-/* ---------------------------
-   BUILD TABLE
-----------------------------*/
+/* -------------------------
+   TABLE BUILDER
+------------------------- */
 function createTable() {
     let html = "";
+
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
     for (let week = 1; week <= 11; week++) {
         html += `<h2>Week ${week}</h2>`;
@@ -163,15 +169,18 @@ function createTable() {
                 <th>Fri</th>
             </tr>`;
 
-        for (let p = 1; p <= 5; p++) {
+        for (let period = 1; period <= 5; period++) {
             html += `<tr>
-                <th>${p}</th>
-                <td>${createCell("Room 13")}</td>
-                <td>${createCell("Room 18")}</td>
-                <td>${createCell("Room 13")}</td>
-                <td>${createCell("Room 18")}</td>
-                <td>${createCell("Room 13")}</td>
-            </tr>`;
+                <th>${period}</th>`;
+
+            for (let d = 0; d < days.length; d++) {
+                const day = days[d];
+                const room = (period % 2 === 0) ? "Room 18" : "Room 13";
+
+                html += `<td>${createCell(week, day, period, room)}</td>`;
+            }
+
+            html += `</tr>`;
         }
 
         html += `</table>`;
@@ -180,9 +189,9 @@ function createTable() {
     document.getElementById("app").innerHTML = html;
 }
 
-/* ---------------------------
-   INIT (IMPORTANT)
-----------------------------*/
+/* -------------------------
+   INIT
+------------------------- */
 async function init() {
     await loadBookings();
     createTable();
