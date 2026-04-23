@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Senior Laptop Booking - Term 2</title>
+<title>Senior Laptop Booking</title>
 
 <style>
     body {
@@ -10,42 +10,28 @@
         margin: 20px;
     }
 
-    h2 {
-        margin-top: 40px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-    }
-
-    th, td {
-        border: 1px solid #333;
-        padding: 8px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #f0f0f0;
+    h1 {
+        margin-bottom: 20px;
     }
 
     .cell-box {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 5px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
     }
 
     select, input, button {
-        padding: 4px;
-        width: 95%;
+        padding: 5px;
     }
 
     .locked {
-        background-color: #d4edda;
-        font-weight: bold;
         padding: 6px;
+        background: #d4edda;
         border: 1px solid #333;
+        font-weight: bold;
     }
 </style>
 </head>
@@ -54,9 +40,44 @@
 
 <h1>Term 2 Senior Laptop Booking</h1>
 
+<div class="cell-box">
+    <select>
+        <option value="">Select Room</option>
+        <option>Room 13</option>
+        <option>Room 18</option>
+    </select>
+
+    <input type="text" placeholder="Your name">
+
+    <button onclick="confirmBooking(this)">Confirm</button>
+</div>
+
 <script>
 function confirmBooking(btn) {
-    alert("BUTTON WORKS");
+    const cell = btn.closest(".cell-box");
+    const room = cell.querySelector("select").value;
+    const name = cell.querySelector("input").value;
+
+    if (!room || !name) {
+        alert("Please select a room and enter your name.");
+        return;
+    }
+
+    fetch("https://script.google.com/macros/s/AKfycbwNJJFYxFTf7Q_s0Ffvk-QUE5p7mda6SQw8HXyt6CsYRfo1GdxYuLI6XQC6ZMUCB6uv/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams({
+            room: room,
+            name: name
+        })
+    });
+
+    cell.innerHTML = `
+        <div class="locked">
+            ${room}<br>
+            ${name}
+        </div>
+    `;
 }
 </script>
 
