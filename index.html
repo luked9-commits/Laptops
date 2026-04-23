@@ -154,13 +154,18 @@ function createCell(week, day, period, room) {
     );
 
     if (booking) {
-        return `
-            <div class="locked">
-                ${room}<br>
-                ${booking.name}
-            </div>
-        `;
-    }
+    return `
+        <div class="locked">
+            ${room}<br>
+            ${booking.name}
+            <br>
+            <button style="color:white;background:red;border:none;padding:4px 8px;cursor:pointer"
+                onclick="deleteBooking('${week}','${day}','${period}','${room}')">
+                ✖
+            </button>
+        </div>
+    `;
+}
 
     return `
         <div class="cell-box">
@@ -217,7 +222,36 @@ function createTable() {
 
     document.getElementById("app").innerHTML = html;
 }
+/* -------------------------
+   Delete booking
+------------------------- */
+    function deleteBooking(week, day, period, room) {
 
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new URLSearchParams({
+            action: "delete",
+            week,
+            day,
+            period,
+            room
+        })
+    })
+    .then(() => {
+        console.log("Deleted");
+
+        // remove from local state
+        bookings = bookings.filter(b =>
+            !(b.week == week &&
+              b.day == day &&
+              b.period == period &&
+              b.room == room)
+        );
+
+        createTable();
+    })
+    .catch(err => console.error("Delete failed:", err));
+}
 /* -------------------------
    INIT
 ------------------------- */
