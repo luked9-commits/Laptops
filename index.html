@@ -62,6 +62,8 @@
 <div id="app"></div>
 
 <script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
+
 function confirmBooking(btn) {
     const cell = btn.closest(".cell-box");
     const room = cell.querySelector("select").value;
@@ -72,14 +74,19 @@ function confirmBooking(btn) {
         return;
     }
 
-    fetch("https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec", {
+    fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors",
-        body: new URLSearchParams({
-            room,
-            name
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            room: room,
+            name: name
         })
-    });
+    })
+    .then(res => res.text())
+    .then(data => console.log("Saved:", data))
+    .catch(err => console.error("Error:", err));
 
     cell.innerHTML = `
         <div class="locked">
