@@ -1,92 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Senior Laptop Booking</title>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-    }
-
-    h1 {
-        margin-bottom: 20px;
-    }
-
-    h2 {
-        margin-top: 30px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-    }
-
-    th, td {
-        border: 1px solid #333;
-        padding: 8px;
-        text-align: center;
-        vertical-align: top;
-    }
-
-    th {
-        background: #f0f0f0;
-    }
-
-    .cell-box {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    select, input, button {
-        padding: 5px;
-        width: 100%;
-    }
-
-    .locked {
-        background: #d4edda;
-        padding: 6px;
-        border: 1px solid #333;
-        font-weight: bold;
-    }
-</style>
-</head>
-
-<body>
-
-<h1>Term 2 Senior Laptop Booking</h1>
-
-<div id="app"></div>
-
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
 function confirmBooking(btn) {
     console.log("CLICKED");
 
+    const cell = btn.closest(".cell-box");
+    const room = cell.querySelector("select").value;
+    const name = cell.querySelector("input").value;
+
+    if (!room || !name) {
+        alert("Please select a room and enter your name.");
+        return;
+    }
+
+    console.log("SENDING");
+
     fetch(SCRIPT_URL, {
         method: "POST",
-        body: "test=hello"
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            room: room,
+            name: name
+        })
     })
     .then(() => console.log("SENT"))
     .catch(err => console.error("FAILED", err));
-}
-
-    console.log("ABOUT TO SEND REQUEST");
-
-    fetch(SCRIPT_URL, {
-    method: "POST",
-    body: new URLSearchParams({
-        room: room,
-        name: name
-    })
-});
-    .then(res => res.text())
-    .then(data => console.log("Saved:", data))
-    .catch(err => console.error("Error:", err));
 
     cell.innerHTML = `
         <div class="locked">
@@ -148,6 +88,3 @@ function createTable() {
 
 createTable();
 </script>
-
-</body>
-</html>
