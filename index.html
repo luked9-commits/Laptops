@@ -145,13 +145,19 @@ function confirmBooking(btn, week, day, period) {
 /* -------------------------
    CELL
 ------------------------- */
-function createCell(week, day, period, room) {
+function createCell(week, day, period) {
 
-    if (isBooked(week, day, period, room)) {
-        const b = getBooking(week, day, period, room);
+    const booking = bookings.find(b =>
+        b.week == week &&
+        b.day == day &&
+        b.period == period
+    );
+
+    if (booking) {
         return `
             <div class="locked">
-                ${room}<br>${b.name}
+                ${booking.room}<br>
+                ${booking.name}
             </div>
         `;
     }
@@ -196,9 +202,8 @@ function createTable() {
 
             for (let d = 0; d < days.length; d++) {
                 const day = days[d];
-                const room = (period % 2 === 0) ? "Room 18" : "Room 13";
-
-                html += `<td>${createCell(week, day, period, room)}</td>`;
+                
+                html += `<td>${createCell(week, day, period)}</td>`;
             }
 
             html += `</tr>`;
