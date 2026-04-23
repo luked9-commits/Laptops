@@ -114,13 +114,12 @@ function getBooking(week, day, period, room) {
 /* -------------------------
    SEND BOOKING
 ------------------------- */
-function confirmBooking(btn, week, day, period) {
+function confirmBooking(btn, week, day, period, room) {
     const cell = btn.closest(".cell-box");
-    const room = cell.querySelector("select").value;
     const name = cell.querySelector("input").value;
 
-    if (!room || !name) {
-        alert("Please select a room and enter your name.");
+    if (!name) {
+        alert("Enter name");
         return;
     }
 
@@ -145,18 +144,19 @@ function confirmBooking(btn, week, day, period) {
 /* -------------------------
    CELL
 ------------------------- */
-function createCell(week, day, period) {
+function createCell(week, day, period, room) {
 
     const booking = bookings.find(b =>
         b.week == week &&
         b.day == day &&
-        b.period == period
+        b.period == period &&
+        b.room == room
     );
 
     if (booking) {
         return `
             <div class="locked">
-                ${booking.room}<br>
+                ${room}<br>
                 ${booking.name}
             </div>
         `;
@@ -164,13 +164,10 @@ function createCell(week, day, period) {
 
     return `
         <div class="cell-box">
-            <select>
-                <option value="">Select Room</option>
-                <option>Room 13</option>
-                <option>Room 18</option>
-            </select>
             <input type="text" placeholder="Your name">
-            <button onclick="confirmBooking(this, ${week}, '${day}', ${period})">Confirm</button>
+            <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+                Confirm ${room}
+            </button>
         </div>
     `;
 }
@@ -197,17 +194,23 @@ function createTable() {
             </tr>`;
 
         for (let period = 1; period <= 5; period++) {
-            html += `<tr>
-                <th>${period}</th>`;
+    html += `<tr>
+        <th>${period}</th>`;
 
-            for (let d = 0; d < days.length; d++) {
-                const day = days[d];
-                
-                html += `<td>${createCell(week, day, period)}</td>`;
-            }
+    for (let d = 0; d < days.length; d++) {
+        const day = days[d];
 
-            html += `</tr>`;
-        }
+        html += `
+            <td>
+                ${createCell(week, day, period, "Room 13")}
+                <hr>
+                ${createCell(week, day, period, "Room 18")}
+            </td>
+        `;
+    }
+
+    html += `</tr>`;
+}
 
         html += `</table>`;
     }
