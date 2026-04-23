@@ -74,16 +74,16 @@ function confirmBooking(btn) {
         return;
     }
 
-    fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            room: room,
-            name: name
-        })
+fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        room: room,
+        name: name
     })
+});
     .then(res => res.text())
     .then(data => console.log("Saved:", data))
     .catch(err => console.error("Error:", err));
