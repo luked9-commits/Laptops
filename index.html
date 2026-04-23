@@ -39,11 +39,6 @@ th {
     font-weight: 600;
 }
 
-.cell-box {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
 
 select, input {
     padding: 3px;
@@ -95,9 +90,10 @@ button {
 
 .cell-box {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    height: 100%;
+    min-height: 45px;
+
 }
 
 .cell-box:hover {
@@ -186,7 +182,13 @@ function getBooking(week, day, period, room) {
             </button>
         </div>
     `;
-
+bookings.push({
+    week: Number(week),
+    day,
+    period: Number(period),
+    room,
+    name
+});
     // 🔄 background sync (no waiting)
     fetch(SCRIPT_URL, {
         method: "POST",
@@ -298,11 +300,13 @@ function createTable() {
 
     // ✅ 1. INSTANT UI UPDATE
     bookings = bookings.filter(b =>
-        !(b.week == week &&
-          b.day == day &&
-          b.period == period &&
-          b.room == room)
-    );
+    !(
+        Number(b.week) === Number(week) &&
+        String(b.day) === String(day) &&
+        Number(b.period) === Number(period) &&
+        String(b.room) === String(room)
+    )
+);
 
     createTable();
 
