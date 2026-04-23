@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Senior Laptop Booking - Term 2</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    h2 {
+        margin-top: 40px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
+    th, td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #f0f0f0;
+    }
+
+    .cell-box {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    select, input, button {
+        padding: 4px;
+        width: 95%;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    .locked {
+        background-color: #d4edda;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Term 2 Senior Laptop Booking</h1>
+
+<script>
+function confirmBooking(btn) {
+    const cell = btn.closest(".cell-box");
+    const room = cell.querySelector("select").value;
+    const name = cell.querySelector("input").value;
+
+    if (!room || !name) {
+        alert("Please select a room and enter your name.");
+        return;
+    }
+
+    // Replace content with locked display
+    cell.innerHTML = `
+        <div class="locked">
+            ${room}<br>
+            ${name}
+        </div>
+    `;
+}
+
+function createCell() {
+    return `
+        <div class="cell-box">
+            <select>
+                <option value="">Select Room</option>
+                <option>Room 13</option>
+                <option>Room 18</option>
+            </select>
+            <input type="text" placeholder="Your name">
+            <button onclick="confirmBooking(this)">Confirm</button>
+        </div>
+    `;
+}
+
+function createWeek(weekNumber) {
+    document.write(`<h2>Week ${weekNumber}</h2>`);
+    document.write(`
+        <table>
+            <tr>
+                <th>Period</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+    `);
+
+    for (let p = 1; p <= 5; p++) {
+        document.write(`<tr>
+            <th>${p}</th>
+            <td>${createCell()}</td>
+            <td>${createCell()}</td>
+            <td>${createCell()}</td>
+            <td>${createCell()}</td>
+            <td>${createCell()}</td>
+        </tr>`);
+    }
+
+    document.write(`</table>`);
+}
+
+for (let i = 1; i <= 11; i++) {
+    createWeek(i);
+}
+</script>
+
+</body>
+</html>
