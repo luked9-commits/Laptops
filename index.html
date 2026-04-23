@@ -65,16 +65,15 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
 function confirmBooking(btn) {
-    console.log("CONFIRM CLICKED");
+    console.log("CLICKED");
 
-    const cell = btn.closest(".cell-box");
-    const room = cell.querySelector("select").value;
-    const name = cell.querySelector("input").value;
-
-    if (!room || !name) {
-        alert("Please select a room and enter your name.");
-        return;
-    }
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        body: "test=hello"
+    })
+    .then(() => console.log("SENT"))
+    .catch(err => console.error("FAILED", err));
+}
 
     console.log("ABOUT TO SEND REQUEST");
 
