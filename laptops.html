@@ -52,8 +52,7 @@
 
 <h1>Term 2 Senior Laptop Booking</h1>
 
-<script>
-function confirmBooking(btn) {
+function confirmBooking(btn, week, period, day) {
     const cell = btn.closest(".cell-box");
     const room = cell.querySelector("select").value;
     const name = cell.querySelector("input").value;
@@ -62,6 +61,25 @@ function confirmBooking(btn) {
         alert("Please select a room and enter your name.");
         return;
     }
+
+    fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify({
+            week,
+            period,
+            day,
+            room,
+            name
+        })
+    });
+
+    cell.innerHTML = `
+        <div class="locked">
+            ${room}<br>
+            ${name}
+        </div>
+    `;
+}
 
     // Replace content with locked display
     cell.innerHTML = `
