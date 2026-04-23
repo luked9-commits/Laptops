@@ -19,3 +19,34 @@ function confirmBooking(btn) {
     `;
 }
 </script>
+
+<script>
+function confirmBooking(btn) {
+    console.log("clicked");
+
+    const cell = btn.closest(".cell-box");
+    const room = cell.querySelector("select").value;
+    const name = cell.querySelector("input").value;
+
+    if (!room || !name) {
+        alert("Please select a room and enter your name.");
+        return;
+    }
+
+    fetch("https://script.google.com/macros/s/AKfycbwNJJFYxFTf7Q_s0Ffvk-QUE5p7mda6SQw8HXyt6CsYRfo1GdxYuLI6XQC6ZMUCB6uv/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams({
+            room: room,
+            name: name
+        })
+    });
+
+    cell.innerHTML = `
+        <div class="locked">
+            ${room}<br>
+            ${name}
+        </div>
+    `;
+}
+</script>
