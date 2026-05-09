@@ -110,6 +110,24 @@ thead th {
     background: #f7f7f7;
     z-index: 10;
 }
+
+.week-summary {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 12px 0;
+    cursor: pointer;
+    padding: 8px;
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+.week-summary:hover {
+    background: #e7e7e7;
+}
+
+details {
+    margin-bottom: 15px;
+}
     
 </style>
 </head>
@@ -125,6 +143,8 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsu
 
 let bookings = [];
 
+let weekSettings = [];
+
 /* -------------------------
    LOAD BOOKINGS
 ------------------------- */
@@ -133,7 +153,8 @@ async function loadBookings() {
         const res = await fetch(SCRIPT_URL);
         const data = await res.json();
 
-        bookings = data.map(b => ({
+        // BOOKINGS
+        bookings = data.bookings.map(b => ({
             week: Number(b.week),
             day: b.day,
             period: Number(b.period),
@@ -141,9 +162,17 @@ async function loadBookings() {
             name: b.name
         }));
 
+        // WEEK SETTINGS
+        weekSettings = data.weekSettings.map(w => ({
+            week: Number(w.week),
+            collapsed: String(w.collapsed).toLowerCase() === "true"
+        }));
+
     } catch (err) {
         console.error("Load failed:", err);
+
         bookings = [];
+        weekSettings = [];
     }
 }
 
@@ -166,6 +195,13 @@ function getBooking(week, day, period, room) {
         b.period == period &&
         b.room == room
     );
+}
+    
+function isWeekCollapsed(week) {
+
+    const setting = weekSettings.find(w => w.week == week);
+
+    return setting ? setting.collapsed : false;
 }
 
 /* -------------------------
@@ -271,10 +307,16 @@ function createTable() {
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
     for (let week = 1; week <= 11; week++) {
-        html += `<h2>Week ${week}</h2>`;
+        const collapsed = isWeekCollapsed(week);
 
-        html += `
-        <table>
+html += `
+<details ${collapsed ? "" : "open"}>
+    <summary class="week-summary">
+        Week ${week}
+    </summary>
+
+    <table>
+`;
             <thead>
                 <tr>
                     <th>Period</th>
@@ -308,8 +350,9 @@ function createTable() {
         }
 
         html += `
-            </tbody>
-        </table>`;
+    </tbody>
+    </table>
+</details>`;
     }
 
     document.getElementById("app").innerHTML = html;
