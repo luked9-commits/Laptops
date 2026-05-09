@@ -298,9 +298,22 @@ function startBooking(cell, week, day, period, room) {
         </button>
     `;
 }
+
+function toggleWeek(week, isOpen) {
+
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new URLSearchParams({
+            type: "weekToggle",
+            week: String(week),
+            collapsed: String(!isOpen)
+        })
+    }).catch(err => console.error("Week toggle failed:", err));
+}
 /* -------------------------
    TABLE
 ------------------------- */
+    
 function createTable() {
     let html = "";
 
@@ -311,7 +324,9 @@ function createTable() {
         const collapsed = isWeekCollapsed(week);
 
         html += `
-<details ${collapsed ? "" : "open"}>
+<details 
+    ${collapsed ? "" : "open"} 
+    onclick="setTimeout(() => toggleWeek(${week}, this.open), 0)">
     <summary class="week-summary">
         Week ${week}
     </summary>
