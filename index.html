@@ -307,28 +307,28 @@ function createTable() {
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
     for (let week = 1; week <= 11; week++) {
+
         const collapsed = isWeekCollapsed(week);
 
-html += `
+        html += `
 <details ${collapsed ? "" : "open"}>
     <summary class="week-summary">
         Week ${week}
     </summary>
 
     <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+            </tr>
+        </thead>
+        <tbody>
 `;
-            <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Mon</th>
-                    <th>Tue</th>
-                    <th>Wed</th>
-                    <th>Thu</th>
-                    <th>Fri</th>
-                </tr>
-            </thead>
-            <tbody>
-        `;
 
         for (let period = 1; period <= 5; period++) {
             html += `<tr>
@@ -350,7 +350,7 @@ html += `
         }
 
         html += `
-    </tbody>
+        </tbody>
     </table>
 </details>`;
     }
