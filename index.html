@@ -128,13 +128,51 @@ thead th {
 details {
     margin-bottom: 15px;
 }
+
+.header {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.version {
+    font-size: 12px;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.header-subtitle {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 4px;
+}
     
 </style>
 </head>
 
 <body>
 
-<h1>Secret Laptop Booking System v3.1</h1>
+<div class="header">
+    <div class="header-title">
+        Secret Laptop Booking System
+        <span class="version">v3.1</span>
+    </div>
+
+    <div class="header-subtitle">
+        Currently 15 devices in rooms 18, and 13.
+    </div>
+</div>
 
 <div id="app"></div>
 
