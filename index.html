@@ -281,13 +281,10 @@ function createCell(week, day, period, room) {
     // ✅ EMPTY CELL (THIS IS THE NEW PART)
     
     return `
-        <div class="cell-box">
-            <input type="text" placeholder="Your name">
-            <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-                Confirm ${room}
-            </button>
-        </div>
-    `;
+    <div class="cell-box"
+         onclick="startBooking(this, ${week}, '${day}', ${period}, '${room}')">
+    </div>
+`;
 }
     
 function startBooking(cell, week, day, period, room) {
@@ -309,6 +306,17 @@ function toggleWeek(week, isOpen) {
             collapsed: String(!isOpen)
         })
     }).catch(err => console.error("Week toggle failed:", err));
+}
+
+function startBooking(cell, week, day, period, room) {
+    cell.innerHTML = `
+        <input 
+            type="text"
+            placeholder="Your name"
+            autofocus
+            onkeydown="if(event.key==='Enter') confirmBooking(this, ${week}, '${day}', ${period}, '${room}')"
+        >
+    `;
 }
 /* -------------------------
    TABLE
@@ -404,6 +412,8 @@ function createTable() {
 /* -------------------------
    INIT
 ------------------------- */
+document.getElementById("app").innerHTML = "<p>Loading bookings...</p>";
+    
 async function init() {
     await loadBookings();
     createTable();
