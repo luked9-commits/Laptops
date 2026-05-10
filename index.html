@@ -178,11 +178,11 @@ details {
     </div>
 
     <div class="header-subtitle">
-        Currently 15 devices in rooms 18, and 13.
+        Currently 15 devices each in rooms 18, and 13.
     </div>
     
 <div class="header-link">
-    Click <a href="https://eldersliehs.sentral.com.au/s-gdpOAz/resources/timetable" target="_blank">HERE</a> for Resource Booking
+    Click <a href="https://eldersliehs.sentral.com.au/s-gdpOAz/resources/timetable" target="_blank">HERE</a> for Sentral Resource Booking
 </div>
     
 </div>
@@ -268,7 +268,7 @@ function isWeekCollapsed(week) {
         return;
     }
 
-    // ⚡ 1. INSTANT UI UPDATE
+    // 1. INSTANT UI UPDATE
     cell.innerHTML = `
         <div class="locked">
             ${room}<br>
@@ -280,7 +280,7 @@ function isWeekCollapsed(week) {
         </div>
     `;
 
-    // 🧠 2. UPDATE LOCAL STATE (THIS IS WHAT YOU ARE MISSING)
+    // 2. UPDATE LOCAL STATE
     bookings.push({
         week: Number(week),
         day,
@@ -289,7 +289,7 @@ function isWeekCollapsed(week) {
         name
     });
 
-    // 🔄 3. SEND TO SHEETS IN BACKGROUND
+    // 3. SEND TO SHEETS IN BACKGROUND
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
@@ -315,7 +315,7 @@ function createCell(week, day, period, room) {
         b.room == room
     );
 
-    // ✅ BOOKED CELL
+    // BOOKED CELL
     if (booking) {
         return `
             <div class="locked">
@@ -329,7 +329,7 @@ function createCell(week, day, period, room) {
         `;
     }
 
-    // ✅ EMPTY CELL (THIS IS THE NEW PART)
+    // EMPTY CELL
     
     return `
     <div class="cell-box">
@@ -439,7 +439,7 @@ function createTable() {
 ------------------------- */
     function deleteBooking(week, day, period, room) {
 
-    // ✅ 1. INSTANT UI UPDATE
+    // INSTANT UI UPDATE
     bookings = bookings.filter(b =>
     !(
         Number(b.week) === Number(week) &&
@@ -451,7 +451,7 @@ function createTable() {
 
     createTable();
 
-    // ✅ 2. BACKGROUND SYNC
+    // BACKGROUND SYNC
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
