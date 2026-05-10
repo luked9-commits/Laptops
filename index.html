@@ -281,8 +281,11 @@ function createCell(week, day, period, room) {
     // ✅ EMPTY CELL (THIS IS THE NEW PART)
     
     return `
-    <div class="cell-box"
-         onclick="startBooking(this, ${week}, '${day}', ${period}, '${room}')">
+    <div class="cell-box">
+        <input type="text" placeholder="Your name">
+        <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+            Confirm ${room}
+        </button>
     </div>
 `;
 }
