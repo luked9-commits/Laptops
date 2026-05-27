@@ -317,17 +317,19 @@ function createCell(week, day, period, room) {
 
     // BOOKED CELL
     if (booking) {
-        return `
-            <div class="locked">
-                ${room}<br>
-                ${booking.name}
-                <button class="delete-btn"
-                    onclick="deleteBooking('${week}','${day}','${period}','${room}')">
-                    ✕
-                </button>
-            </div>
-        `;
-    }
+    return `
+        <div class="locked">
+            ${room}<br>
+            ${booking.name}<br>
+            ${booking.quantity ?? 15} devices
+
+            <button class="delete-btn"
+                onclick="deleteBooking('${week}','${day}','${period}','${room}')">
+                ✕
+            </button>
+        </div>
+    `;
+}
 
     // EMPTY CELL
     
