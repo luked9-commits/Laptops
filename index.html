@@ -102,7 +102,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.62</span>
+        <span class="version">v4.78</span>
     </div>
 
     <div class="header-subtitle">
@@ -144,14 +144,10 @@ function confirmBooking(el, week, day, period, room) {
 
     const cell = el.closest(".cell-box");
 
-    const name = cell.querySelector("input")?.value;
-    const select = cell.querySelector("select");
-    const qty = select ? select.value : 15;
+    const name = cell.querySelector("input[type='text']").value;
+    const qty = cell.querySelector(".qty").value || 15;
 
     if (!name) return;
-
-    if (cell.dataset.confirmed === "true") return;
-    cell.dataset.confirmed = "true";
 
     cell.innerHTML = `
         <div class="locked">
@@ -182,7 +178,7 @@ function confirmBooking(el, week, day, period, room) {
             name,
             quantity: qty
         })
-    }).catch(err => console.error("Save failed:", err));
+    });
 }
 
 /* ---------------- CELL ---------------- */
@@ -210,17 +206,13 @@ function createCell(week, day, period, room) {
 return `
 <div class="cell-box">
 
-    <input type="text" placeholder="Name">
+    <input type="text" placeholder="Name"
+        onkeydown="if(event.key==='Enter') confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
 
-    <select>
-        ${Array.from({length: 15}, (_, i) => {
-            const v = 15 - i;
-            return `<option value="${v}">${v} devices</option>`;
-        }).join("")}
-    </select>
+    <input type="number" min="1" max="15" value="15" class="qty">
 
     <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-        Confirm
+        Book
     </button>
 
 </div>
