@@ -215,7 +215,23 @@ function createCell(week, day, period, room) {
         </div>
     `;
 }
+    
+function isWeekCollapsed(week) {
+    const setting = weekSettings.find(w => w.week == week);
+    return setting ? setting.collapsed : false;
+}
 
+function toggleWeek(week, isOpen) {
+
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new URLSearchParams({
+            type: "weekToggle",
+            week: String(week),
+            collapsed: String(!isOpen)
+        })
+    }).catch(err => console.error(err));
+}
 /* ---------------- DELETE ---------------- */
 function deleteBooking(week, day, period, room) {
 
@@ -246,8 +262,11 @@ function createTable() {
 
     for (let week = 1; week <= 11; week++) {
 
+        const collapsed = isWeekCollapsed(week);
+
         html += `
-<details open>
+<details ${collapsed ? "" : "open"} 
+    onclick="setTimeout(() => toggleWeek(${week}, this.open), 0)">
 <summary class="week-summary">Week ${week}</summary>
 
 <table>
