@@ -140,13 +140,17 @@ async function loadBookings() {
 }
 
 /* ---------------- CONFIRM ---------------- */
-function confirmBooking(btn, week, day, period, room) {
+function confirmBooking(select, week, day, period, room) {
 
-    const cell = btn.closest(".cell-box");
+    const cell = select.closest(".cell-box");
     const name = cell.querySelector("input").value;
-    const qty = cell.querySelector("select").value;
+    const qty = select.value;
 
     if (!name) return;
+
+    // prevent double-trigger issues
+    if (cell.dataset.confirmed === "true") return;
+    cell.dataset.confirmed = "true";
 
     cell.innerHTML = `
         <div class="locked">
@@ -206,16 +210,24 @@ function createCell(week, day, period, room) {
 <div class="cell-box">
     <input type="text" placeholder="Name">
 
-    <select>
+   return `
+<div class="cell-box">
+
+    <input type="text" placeholder="Name">
+
+    <select 
+        onchange="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')"
+    >
         ${Array.from({length: 15}, (_, i) => {
             const v = 15 - i;
             return `<option value="${v}">${v} devices</option>`;
         }).join("")}
     </select>
 
-    <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+    <button onclick="confirmBooking(this.previousElementSibling, ${week}, '${day}', ${period}, '${room}')">
         Confirm
     </button>
+
 </div>
 `;
 }
