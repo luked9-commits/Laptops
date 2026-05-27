@@ -10,16 +10,6 @@ body {
     margin: 20px;
 }
 
-h1 {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-h2 {
-    font-size: 16px;
-    margin-top: 20px;
-}
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -30,24 +20,11 @@ th, td {
     border: 1px solid #ccc;
     padding: 4px;
     text-align: center;
-    vertical-align: top;
     font-size: 12px;
 }
 
 th {
     background: #f7f7f7;
-    font-weight: 600;
-}
-
-
-select, input {
-    padding: 3px;
-    font-size: 11px;
-}
-
-button {
-    padding: 3px;
-    font-size: 11px;
 }
 
 .locked {
@@ -55,137 +32,43 @@ button {
     background: #d4edda;
     padding: 6px;
     border-radius: 4px;
-    border: 1px solid #b5d6b5;
     font-size: 11px;
-    line-height: 1.2;
-
-    width: 100%;
-    box-sizing: border-box;
 }
-    
-    .delete-btn {
+
+.delete-btn {
     position: absolute;
     top: 2px;
     right: 2px;
-
     background: transparent;
     border: none;
     color: #e74c3c;
-
-    font-size: 11px;
     cursor: pointer;
-
     opacity: 0;
-    transition: 0.15s ease;
 }
 
 .locked:hover .delete-btn {
     opacity: 1;
 }
 
-.delete-btn:hover {
-    color: #c0392b;
-}
-    .placeholder {
-    font-size: 16px;
-    color: #bbb;
-    cursor: pointer;
-}
-
 .cell-box {
     display: flex;
-    align-items: stretch;
-    justify-content: center;
-    min-height: 45px;
-
-}
-
-.cell-box:hover {
-    background: #f5f5f5;
-}
-
-thead th {
-    position: sticky;
-    top: 0;
-    background: #f7f7f7;
-    z-index: 10;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
 }
 
 .week-summary {
-    font-size: 16px;
     font-weight: bold;
-    margin: 12px 0;
     cursor: pointer;
     padding: 8px;
     background: #f1f1f1;
-    border-radius: 6px;
+    margin: 10px 0;
 }
 
-.week-summary:hover {
-    background: #e7e7e7;
-}
-
-details {
-    margin-bottom: 15px;
-}
-
-.header {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-    color: white;
-    padding: 14px 18px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.header-title {
-    font-size: 20px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.version {
-    font-size: 12px;
-    background: rgba(255,255,255,0.2);
-    padding: 2px 6px;
-    border-radius: 6px;
-}
-
-.header-subtitle {
-    font-size: 12px;
-    opacity: 0.85;
-    margin-top: 4px;
-}
-
-.header-link a:link,
-.header-link a:visited,
-.header-link a:hover,
-.header-link a:active {
-    color: white;
-    text-decoration: none;
-}
-    
 </style>
 </head>
 
 <body>
-
-<div class="header">
-    <div class="header-title">
-        Secret Laptop Booking System
-        <span class="version">v4.61</span>
-    </div>
-
-    <div class="header-subtitle">
-        Currently 15 devices each in rooms 18, and 13.
-    </div>
-    
-<div class="header-link">
-    Click <a href="https://eldersliehs.sentral.com.au/s-gdpOAz/resources/timetable" target="_blank">HERE</a> for Sentral Resource Booking
-</div>
-    
-</div>
 
 <div id="app"></div>
 
@@ -193,103 +76,65 @@ details {
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
 let bookings = [];
-
 let weekSettings = [];
 
-/* -------------------------
-   LOAD BOOKINGS
-------------------------- */
+/* ---------------- LOAD ---------------- */
 async function loadBookings() {
-    try {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
 
-        // BOOKINGS
-        bookings = data.bookings.map(b => ({
-            week: Number(b.week),
-            day: b.day,
-            period: Number(b.period),
-            room: b.room,
-            name: b.name
-        }));
+    bookings = data.bookings.map(b => ({
+        week: Number(b.week),
+        day: b.day,
+        period: Number(b.period),
+        room: b.room,
+        name: b.name,
+        quantity: Number(b.quantity || 15)
+    }));
 
-        // WEEK SETTINGS
-        weekSettings = data.weekSettings.map(w => ({
-            week: Number(w.week),
-            collapsed: String(w.collapsed).toLowerCase() === "true"
-        }));
-
-    } catch (err) {
-        console.error("Load failed:", err);
-
-        bookings = [];
-        weekSettings = [];
-    }
+    weekSettings = data.weekSettings || [];
 }
 
-/* -------------------------
-   CHECK BOOKINGS
-------------------------- */
-function isBooked(week, day, period, room) {
-    return bookings.some(b =>
-        b.week == week &&
-        b.day == day &&
-        b.period == period &&
-        b.room == room
-    );
-}
-
-function getBooking(week, day, period, room) {
-    return bookings.find(b =>
-        b.week == week &&
-        b.day == day &&
-        b.period == period &&
-        b.room == room
-    );
-}
-    
+/* ---------------- WEEK STATE ---------------- */
 function isWeekCollapsed(week) {
-
-    const setting = weekSettings.find(w => w.week == week);
-
-    return setting ? setting.collapsed : false;
+    const w = weekSettings.find(x => x.week == week);
+    return w ? w.collapsed : false;
 }
 
-/* -------------------------
-   SEND BOOKING
-------------------------- */
+/* ---------------- BOOKING ---------------- */
+function confirmBooking(el, week, day, period, room) {
+    const cell = el.closest(".cell-box");
 
-    function confirmBooking(btn, week, day, period, room) {
-    const cell = btn.closest(".cell-box");
     const name = cell.querySelector("input").value;
+    const qty = cell.querySelector("select").value;
 
-    if (!name) {
-        alert("Enter name");
+    if (!name || !qty) {
+        alert("Enter name and select quantity");
         return;
     }
 
-    // 1. INSTANT UI UPDATE
-    cell.innerHTML = `
+    // UI update
+    cell.outerHTML = `
         <div class="locked">
             ${room}<br>
-            ${name}
+            ${name}<br>
+            ${qty} devices
             <button class="delete-btn"
-                onclick="deleteBooking('${week}','${day}','${period}','${room}')">
-                ✕
-            </button>
+                onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
         </div>
     `;
 
-    // 2. UPDATE LOCAL STATE
+    // local state
     bookings.push({
         week: Number(week),
         day,
         period: Number(period),
         room,
-        name
+        name,
+        quantity: Number(qty)
     });
 
-    // 3. SEND TO SHEETS IN BACKGROUND
+    // backend
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
@@ -297,125 +142,100 @@ function isWeekCollapsed(week) {
             day,
             period,
             room,
-            name
+            name,
+            quantity: qty
         })
-    }).catch(err => console.error("Save failed:", err));
+    });
 }
 
-
-/* -------------------------
-   CELL
-------------------------- */
+/* ---------------- CELL ---------------- */
 function createCell(week, day, period, room) {
 
-    const booking = bookings.find(b =>
-        b.week == week &&
-        b.day == day &&
-        b.period == period &&
-        b.room == room
+    const b = bookings.find(x =>
+        x.week == week &&
+        x.day == day &&
+        x.period == period &&
+        x.room == room
     );
 
-    // BOOKED CELL
-    if (booking) {
-    return `
-        <div class="locked">
-            ${room}<br>
-            ${booking.name}<br>
-            ${booking.quantity ?? 15} devices
+    if (b) {
+        return `
+            <div class="locked">
+                ${room}<br>
+                ${b.name}<br>
+                ${b.quantity || 15} devices
+                <button class="delete-btn"
+                    onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
+            </div>
+        `;
+    }
 
-            <button class="delete-btn"
-                onclick="deleteBooking('${week}','${day}','${period}','${room}')">
-                ✕
+    return `
+        <div class="cell-box">
+            <input type="text" placeholder="Name">
+
+            <select>
+                ${Array.from({length: 15}, (_, i) => {
+                    const v = i + 1;
+                    return `<option value="${v}">${v} devices</option>`;
+                }).join("")}
+            </select>
+
+            <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+                Book
             </button>
         </div>
     `;
 }
 
-    // EMPTY CELL
-    
-    return `
-    <div class="cell-box">
-        <input type="text" placeholder="Your name">
-        <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-            Confirm ${room}
-        </button>
-    </div>
-`;
-}
-    
-function startBooking(cell, week, day, period, room) {
-    cell.innerHTML = `
-        <input type="text" placeholder="Name" style="font-size:11px;padding:3px;">
-        <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-            ✓
-        </button>
-    `;
-}
+/* ---------------- DELETE ---------------- */
+function deleteBooking(week, day, period, room) {
 
-function toggleWeek(week, isOpen) {
+    bookings = bookings.filter(b =>
+        !(b.week == week && b.day == day && b.period == period && b.room == room)
+    );
+
+    createTable();
 
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
-            type: "weekToggle",
-            week: String(week),
-            collapsed: String(!isOpen)
+            action: "delete",
+            week,
+            day,
+            period,
+            room
         })
-    }).catch(err => console.error("Week toggle failed:", err));
+    });
 }
 
-function startBooking(cell, week, day, period, room) {
-    cell.innerHTML = `
-        <input 
-            type="text"
-            placeholder="Your name"
-            autofocus
-            onkeydown="if(event.key==='Enter') confirmBooking(this, ${week}, '${day}', ${period}, '${room}')"
-        >
-    `;
-}
-/* -------------------------
-   TABLE
-------------------------- */
-    
+/* ---------------- TABLE ---------------- */
 function createTable() {
-    let html = "";
 
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const days = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
+
+    let html = "";
 
     for (let week = 1; week <= 11; week++) {
 
-        const collapsed = isWeekCollapsed(week);
-
         html += `
-<details 
-    ${collapsed ? "" : "open"} 
-    onclick="setTimeout(() => toggleWeek(${week}, this.open), 0)">
-    <summary class="week-summary">
-        Week ${week}
-    </summary>
+<details ${isWeekCollapsed(week) ? "" : "open"}>
+<summary class="week-summary">Week ${week}</summary>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Period</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-            </tr>
-        </thead>
-        <tbody>
+<table>
+<thead>
+<tr>
+<th>Period</th>
+<th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th>
+</tr>
+</thead>
+<tbody>
 `;
 
         for (let period = 1; period <= 5; period++) {
-            html += `<tr>
-                <th>${period}</th>`;
+            html += `<tr><th>${period}</th>`;
 
-            for (let d = 0; d < days.length; d++) {
-                const day = days[d];
-
+            for (let day of days) {
                 html += `
                     <td>
                         ${createCell(week, day, period, "Room 13")}
@@ -428,49 +248,15 @@ function createTable() {
             html += `</tr>`;
         }
 
-        html += `
-        </tbody>
-    </table>
-</details>`;
+        html += `</tbody></table></details>`;
     }
 
     document.getElementById("app").innerHTML = html;
 }
-/* -------------------------
-   Delete booking
-------------------------- */
-    function deleteBooking(week, day, period, room) {
 
-    // INSTANT UI UPDATE
-    bookings = bookings.filter(b =>
-    !(
-        Number(b.week) === Number(week) &&
-        String(b.day) === String(day) &&
-        Number(b.period) === Number(period) &&
-        String(b.room) === String(room)
-    )
-);
-
-    createTable();
-
-    // BACKGROUND SYNC
-    fetch(SCRIPT_URL, {
-        method: "POST",
-        body: new URLSearchParams({
-            action: "delete",
-            week,
-            day,
-            period,
-            room
-        })
-    }).catch(err => console.error("Delete failed:", err));
-}
-/* -------------------------
-   INIT
-------------------------- */
-document.getElementById("app").innerHTML = "<p>Loading bookings...</p>";
-    
+/* ---------------- INIT ---------------- */
 async function init() {
+    document.getElementById("app").innerHTML = "Loading...";
     await loadBookings();
     createTable();
 }
