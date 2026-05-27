@@ -102,7 +102,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.79</span>
+        <span class="version">v4.80</span>
     </div>
 
     <div class="header-subtitle">
@@ -206,25 +206,28 @@ function createCell(week, day, period, room) {
         `;
     }
 
-return `
-<div class="cell-box">
-    <input type="text" placeholder="Name">
+    return `
+        <div class="cell-box">
+            <input type="text" placeholder="Name">
 
-    <div style="display:flex; gap:4px; align-items:center;">
-        <select>
-            ${Array.from({length: 15}, (_, i) => {
-                const v = 15 - i;
-                return `<option value="${v}">${v}</option>`;
-            }).join("")}
-        </select>
+            <div style="display:flex; gap:4px; align-items:center;">
+                <select>
+                    ${Array.from({length: 15}, (_, i) => {
+                        const v = 15 - i;
+                        return `<option value="${v}">${v}</option>`;
+                    }).join("")}
+                </select>
 
-        <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-            Book
-        </button>
-    </div>
-</div>
-`;
-    
+                <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+                    Book
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+
+/* ---------------- WEEK SETTINGS ---------------- */
 function isWeekCollapsed(week) {
     if (!weekSettings || !Array.isArray(weekSettings)) return false;
 
@@ -232,8 +235,9 @@ function isWeekCollapsed(week) {
     return setting ? setting.collapsed : false;
 }
 
-function toggleWeek(week, isOpen) {
 
+/* ---------------- TOGGLE WEEK ---------------- */
+function toggleWeek(week, isOpen) {
     fetch(SCRIPT_URL, {
         method: "POST",
         body: new URLSearchParams({
@@ -243,6 +247,8 @@ function toggleWeek(week, isOpen) {
         })
     }).catch(err => console.error(err));
 }
+
+
 /* ---------------- DELETE ---------------- */
 function deleteBooking(week, day, period, room) {
 
