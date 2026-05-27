@@ -140,11 +140,11 @@ async function loadBookings() {
 }
 
 /* ---------------- CONFIRM ---------------- */
-function confirmBooking(select, week, day, period, room) {
+function confirmBooking(btn, week, day, period, room) {
 
-    const cell = select.closest(".cell-box");
+    const cell = btn.closest(".cell-box");
     const name = cell.querySelector("input").value;
-    const qty = select.value;
+    const qty = cell.querySelector("select").value;
 
     if (!name) return;
 
@@ -203,17 +203,21 @@ function createCell(week, day, period, room) {
     }
 
     return `
-        <div class="cell-box">
-            <input type="text" placeholder="Name">
+<div class="cell-box">
+    <input type="text" placeholder="Name">
 
-            <select onchange="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-                ${Array.from({length: 15}, (_, i) => {
-                    const v = 15 - i; // puts 15 at top
-                    return `<option value="${v}">${v} devices</option>`;
-                }).join("")}
-            </select>
-        </div>
-    `;
+    <select>
+        ${Array.from({length: 15}, (_, i) => {
+            const v = 15 - i;
+            return `<option value="${v}">${v} devices</option>`;
+        }).join("")}
+    </select>
+
+    <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+        Confirm
+    </button>
+</div>
+`;
 }
     
 function isWeekCollapsed(week) {
