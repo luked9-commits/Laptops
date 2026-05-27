@@ -140,15 +140,16 @@ async function loadBookings() {
 }
 
 /* ---------------- CONFIRM ---------------- */
-function confirmBooking(select, week, day, period, room) {
+function confirmBooking(el, week, day, period, room) {
 
-    const cell = select.closest(".cell-box");
-    const name = cell.querySelector("input").value;
-    const qty = select.value;
+    const cell = el.closest(".cell-box");
+
+    const name = cell.querySelector("input")?.value;
+    const select = cell.querySelector("select");
+    const qty = select ? select.value : 15;
 
     if (!name) return;
 
-    // prevent double-trigger issues
     if (cell.dataset.confirmed === "true") return;
     cell.dataset.confirmed = "true";
 
@@ -181,7 +182,7 @@ function confirmBooking(select, week, day, period, room) {
             name,
             quantity: qty
         })
-    });
+    }).catch(err => console.error("Save failed:", err));
 }
 
 /* ---------------- CELL ---------------- */
@@ -206,25 +207,19 @@ function createCell(week, day, period, room) {
         `;
     }
 
-    return `
-<div class="cell-box">
-    <input type="text" placeholder="Name">
-
-   return `
+return `
 <div class="cell-box">
 
     <input type="text" placeholder="Name">
 
-    <select 
-        onchange="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')"
-    >
+    <select>
         ${Array.from({length: 15}, (_, i) => {
             const v = 15 - i;
             return `<option value="${v}">${v} devices</option>`;
         }).join("")}
     </select>
 
-    <button onclick="confirmBooking(this.previousElementSibling, ${week}, '${day}', ${period}, '${room}')">
+    <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
         Confirm
     </button>
 
