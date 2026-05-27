@@ -334,23 +334,9 @@ function createCell(week, day, period, room) {
     return `
     <div class="cell-box">
         <input type="text" placeholder="Your name">
-
-        <select
-            class="qty-select"
-            onchange="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')"
-        >
-            <option value="">Book ${room}</option>
-
-            ${Array.from({length: 15}, (_, i) => {
-                const val = i + 1;
-
-                return `
-                    <option value="${val}" ${val === 15 ? "selected" : ""}>
-                        ${val} devices
-                    </option>
-                `;
-            }).join("")}
-        </select>
+        <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+            Confirm ${room}
+        </button>
     </div>
 `;
 }
