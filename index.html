@@ -119,7 +119,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.94</span>
+        <span class="version">v4.95</span>
     </div>
 
     <div class="header-subtitle">
@@ -225,6 +225,10 @@ function createCell(week, day, period, room) {
 
     // EMPTY CELL
 
+// EMPTY CELL
+
+const maxDevices = room === "Room 12" ? 32 : 15;
+
 return `
 <div class="room-row">
 
@@ -233,10 +237,8 @@ return `
     <input type="text" placeholder="Name" style="width:60px;">
 
     <select>
-        const maxDevices = room === "Room 12" ? 32 : 15;
-
-${Array.from({length: maxDevices}, (_, i) => {
-    const v = maxDevices - i;
+        ${Array.from({length: maxDevices}, (_, i) => {
+            const v = maxDevices - i;
             return `<option value="${v}">${v}</option>`;
         }).join("")}
     </select>
