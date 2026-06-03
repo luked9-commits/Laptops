@@ -81,10 +81,27 @@ th {
     gap: 3px;
     align-items: center;
 }
-
+.room-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 3px;
+    font-size: 10px;
+}
 select, input {
     font-size: 11px;
     padding: 2px;
+}
+    .day-cell {
+    vertical-align: top;
+}
+
+.room-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 3px;
+    font-size: 10px;
 }
 
 .week-summary {
@@ -195,8 +212,8 @@ function createCell(week, day, period, room) {
     );
 
     if (b) {
-        return `
-            <div class="locked">
+       return `
+    <div class="room-row locked">
                 ${room}<br>
                 ${b.name}<br>
                 ${b.quantity || 15} devices
@@ -206,24 +223,28 @@ function createCell(week, day, period, room) {
         `;
     }
 
-    return `
-        <div class="cell-box">
-            <input type="text" placeholder="Name">
+    // EMPTY CELL
 
-            <div style="display:flex; gap:4px; align-items:center;">
-                <select>
-                    ${Array.from({length: 15}, (_, i) => {
-                        const v = 15 - i;
-                        return `<option value="${v}">${v}</option>`;
-                    }).join("")}
-                </select>
+return `
+<div class="room-row">
 
-                <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-                    Book
-                </button>
-            </div>
-        </div>
-    `;
+    <span>${room}</span>
+
+    <input type="text" placeholder="Name" style="width:60px;">
+
+    <select>
+        ${Array.from({length: 15}, (_, i) => {
+            const v = 15 - i;
+            return `<option value="${v}">${v}</option>`;
+        }).join("")}
+    </select>
+
+    <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+        ✓
+    </button>
+
+</div>
+`;
 }
 
 
@@ -301,11 +322,11 @@ function createTable() {
 
             for (let day of days) {
                 html += `
-                    <td>
-                        ${createCell(week, day, period, "Room 13")}
-                        <hr>
-                        ${createCell(week, day, period, "Room 18")}
-                    </td>
+                    <td class="day-cell">
+    ${createCell(week, day, period, "13")}
+    ${createCell(week, day, period, "18")}
+    ${createCell(week, day, period, "20")}
+</td>
                 `;
             }
 
