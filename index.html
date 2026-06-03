@@ -160,7 +160,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.02</span>
+        <span class="version">v5.03</span>
     </div>
 
     <div class="header-subtitle">
@@ -210,15 +210,14 @@ function confirmBooking(btn, week, day, period, room) {
     if (cell.dataset.confirmed === "true") return;
     cell.dataset.confirmed = "true";
 
-    cell.innerHTML = `
-        <div class="locked">
-            ${room}<br>
-            ${name}<br>
-            ${qty} devices
-            <button class="delete-btn"
-                onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
-        </div>
-    `;
+  cell.innerHTML = `
+    <div class="locked">
+        <span>${room} - ${name} - ${qty} devices</span>
+
+        <button class="delete-btn"
+            onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
+    </div>
+`;
 
     bookings.push({
         week: Number(week),
