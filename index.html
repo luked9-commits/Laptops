@@ -119,7 +119,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.92</span>
+        <span class="version">v4.93</span>
     </div>
 
     <div class="header-subtitle">
@@ -159,7 +159,7 @@ async function loadBookings() {
 /* ---------------- CONFIRM ---------------- */
 function confirmBooking(btn, week, day, period, room) {
 
-    const cell = btn.closest(".cell-box");
+    const cell = btn.closest(".room-row");
 
     const name = cell.querySelector("input").value;
     const qty = cell.querySelector("select").value;
@@ -325,7 +325,7 @@ function createTable() {
                     <td class="day-cell">
     ${createCell(week, day, period, "Room 13")}
 ${createCell(week, day, period, "Room 18")}
-${createCell(week, day, period, "Room 20")}
+${createCell(week, day, period, "Room 12")}
 </td>
                 `;
             }
