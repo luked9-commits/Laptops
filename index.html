@@ -173,7 +173,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.04</span>
+        <span class="version">v5.11</span>
     </div>
 
     <div class="header-subtitle">
@@ -184,10 +184,20 @@ select, input {
     Click <a href="https://eldersliehs.sentral.com.au/s-gdpOAz/resources/timetable" target="_blank">HERE</a> for Sentral Resource Booking
 </div>
 </div>
+    
+    <div id="userBar" style="margin-bottom:10px;">
+    <input id="userInput" placeholder="Enter your name">
+    <button onclick="setUser()">Set User</button>
 
-<div id="app">Loading...</div>
+    <span id="currentUserDisplay" style="margin-left:10px;"></span>
+</div>
+
+<div <script>">Loading...</div>
 
 <script>
+    
+    let currentUser = localStorage.getItem("laptopUser") || "";
+    
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwldON0MFK4Q2jWhRFsubAFQNBdQhx43kThazkpdjGV4tQDI7vz6yBNok9YRNvUOVr3/exec";
 
 let bookings = [];
@@ -211,11 +221,15 @@ async function loadBookings() {
 }
 
 /* ---------------- CONFIRM ---------------- */
-function confirmBooking(btn, week, day, period, room) {
+if (!currentUser) {
+    alert("Please set your user first");
+    return;
+}
+    function confirmBooking(btn, week, day, period, room) {
 
     const cell = btn.closest(".room-row");
 
-    const name = cell.querySelector("input").value;
+    const name = currentUser;
     const qty = cell.querySelector("select").value;
 
     if (!name) return;
@@ -289,8 +303,6 @@ return `
 
     <div class="controls">
 
-        <input type="text" placeholder="Name">
-
         <select>
             ${Array.from({length: room === "Room 12" ? 32 : 15}, (_, i) => {
                 const v = (room === "Room 12" ? 32 : 15) - i;
@@ -352,6 +364,26 @@ function deleteBooking(week, day, period, room) {
     });
 }
 
+/* ---------------- CREATE USER ---------------- */
+    function setUser() {
+    const name = document.getElementById("userInput").value;
+
+    if (!name) return;
+
+    currentUser = name;
+
+    localStorage.setItem("laptopUser", name);
+
+    updateUserDisplay();
+}
+
+function updateUserDisplay() {
+    const display = document.getElementById("currentUserDisplay");
+
+    display.textContent = currentUser
+        ? "Logged in as: " + currentUser
+        : "No user set";
+}
 /* ---------------- TABLE ---------------- */
 function createTable() {
 
@@ -403,6 +435,7 @@ ${createCell(week, day, period, "Room 12")}
 /* ---------------- INIT ---------------- */
 async function init() {
     await loadBookings();
+    updateUserDisplay();
     createTable();
 }
 
