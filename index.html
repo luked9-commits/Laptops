@@ -173,7 +173,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.11</span>
+        <span class="version">v5.12</span>
     </div>
 
     <div class="header-subtitle">
@@ -192,7 +192,7 @@ select, input {
     <span id="currentUserDisplay" style="margin-left:10px;"></span>
 </div>
 
-<div <script>">Loading...</div>
+<div id="app">Loading...</div>
 
 <script>
     
@@ -221,12 +221,13 @@ async function loadBookings() {
 }
 
 /* ---------------- CONFIRM ---------------- */
-if (!currentUser) {
-    alert("Please set your user first");
-    return;
-}
+
     function confirmBooking(btn, week, day, period, room) {
 
+        if (!currentUser) {
+    alert("Please set your user first");
+    return;
+            
     const cell = btn.closest(".room-row");
 
     const name = currentUser;
@@ -379,6 +380,7 @@ function deleteBooking(week, day, period, room) {
 
 function updateUserDisplay() {
     const display = document.getElementById("currentUserDisplay");
+    if (!display) return;
 
     display.textContent = currentUser
         ? "Logged in as: " + currentUser
