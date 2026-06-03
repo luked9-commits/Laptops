@@ -119,11 +119,11 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.93</span>
+        <span class="version">v4.94</span>
     </div>
 
     <div class="header-subtitle">
-        Currently 15 devices each in rooms 18 and 13, also x in room 12
+        Currently 15 devices each in rooms 18 and 13, and 32~ in room 12
     </div>
 
     <div class="header-link">
@@ -233,8 +233,10 @@ return `
     <input type="text" placeholder="Name" style="width:60px;">
 
     <select>
-        ${Array.from({length: 15}, (_, i) => {
-            const v = 15 - i;
+        const maxDevices = room === "Room 12" ? 32 : 15;
+
+${Array.from({length: maxDevices}, (_, i) => {
+    const v = maxDevices - i;
             return `<option value="${v}">${v}</option>`;
         }).join("")}
     </select>
