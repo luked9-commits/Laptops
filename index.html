@@ -61,7 +61,20 @@ th {
 .day-cell {
     vertical-align: top;
 }
+.locked {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
+    padding: 4px 6px;
+    background: #d4edda;
+    border-radius: 4px;
+
+    font-size: 10px;
+    white-space: nowrap;
+
+    position: relative;
+}
 /* =========================
    BOOKING ROW (INPUT STATE)
 ========================= */
@@ -160,7 +173,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.03</span>
+        <span class="version">v5.04</span>
     </div>
 
     <div class="header-subtitle">
