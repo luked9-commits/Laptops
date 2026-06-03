@@ -113,6 +113,11 @@ th {
     flex-shrink: 0;
     font-weight: bold;
 }
+    .booking-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* =========================
    CONFIRMED BOOKING STATE
@@ -173,7 +178,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.14</span>
+        <span class="version">v5.15</span>
     </div>
 
     <div class="header-subtitle">
@@ -285,12 +290,10 @@ function createCell(week, day, period, room) {
     if (b) {
        return `
     <div class="room-row locked">
-                ${room}<br>
-                ${b.name}<br>
-                ${b.quantity || 15} devices
-                <button class="delete-btn"
-                    onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
-            </div>
+    <span class="booking-text">${room} — ${b.name} — ${b.quantity || 15} devices</span>
+    <button class="delete-btn"
+        onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
+</div>
         `;
     }
 
