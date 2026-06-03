@@ -120,6 +120,13 @@ select, input {
     .room-row {
     display: inline-grid;
 }
+    
+.room-row input,
+.room-row select {
+    width: 100%;
+    font-size: 10px;
+    box-sizing: border-box;
+}
 
 .locked {
     display: flex;
@@ -146,6 +153,19 @@ select, input {
     font-weight: bold;
     margin-top: 10px;
 }
+    .controls {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+    .room-row input {
+    min-width: 0;
+}
+    .controls button {
+    flex-shrink: 0;
+    width: 40px;
+}
 </style>
 </head>
 
@@ -154,7 +174,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.99</span>
+        <span class="version">v5.01</span>
     </div>
 
     <div class="header-subtitle">
