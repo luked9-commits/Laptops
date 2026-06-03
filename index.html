@@ -162,7 +162,26 @@ th {
     font-weight: bold;
     margin-top: 10px;
 }
+    
+/* =========================
+   COLLAPSING WEEK
+========================= */
+    details {
+    margin-bottom: 8px;
+}
 
+details:not([open]) {
+    opacity: 0.65;
+}
+
+details:not([open]) .week-summary {
+    padding: 3px 8px;
+    font-size: 11px;
+    background: #e9e9e9;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 4px;
+}
 /* =========================
    FORM ELEMENTS (GLOBAL)
 ========================= */
@@ -178,7 +197,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.15</span>
+        <span class="version">v5.16</span>
     </div>
 
     <div class="header-subtitle">
