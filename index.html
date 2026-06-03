@@ -173,7 +173,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.12</span>
+        <span class="version">v5.13</span>
     </div>
 
     <div class="header-subtitle">
@@ -222,30 +222,29 @@ async function loadBookings() {
 
 /* ---------------- CONFIRM ---------------- */
 
-    function confirmBooking(btn, week, day, period, room) {
+function confirmBooking(btn, week, day, period, room) {
 
-        if (!currentUser) {
-    alert("Please set your user first");
-    return;
-            
+    if (!currentUser) {
+        alert("Please set your user first");
+        return;
+    }
+
     const cell = btn.closest(".room-row");
 
     const name = currentUser;
     const qty = cell.querySelector("select").value;
 
-    if (!name) return;
-
     if (cell.dataset.confirmed === "true") return;
     cell.dataset.confirmed = "true";
 
-  cell.innerHTML = `
-    <div class="locked">
-        <span>${room} - ${name} - ${qty} devices</span>
+    cell.innerHTML = `
+        <div class="locked">
+            <span>${room} - ${name} - ${qty} devices</span>
 
-        <button class="delete-btn"
-            onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
-    </div>
-`;
+            <button class="delete-btn"
+                onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
+        </div>
+    `;
 
     bookings.push({
         week: Number(week),
@@ -267,7 +266,7 @@ async function loadBookings() {
             quantity: qty
         })
     });
-}
+}  
 
 /* ---------------- CELL ---------------- */
 function createCell(week, day, period, room) {
