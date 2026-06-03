@@ -59,6 +59,11 @@ th {
     font-size: 11px;
     position: relative;
 }
+    .controls {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
     .locked {
     text-align: center;
     line-height: 1.4;
@@ -95,11 +100,15 @@ select, input {
 }
 
 .room-row {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
     gap: 4px;
-    margin-bottom: 3px;
+    padding: 4px;
     font-size: 10px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    align-items: center;
 }
 
 select, input {
@@ -126,7 +135,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.96</span>
+        <span class="version">v4.97</span>
     </div>
 
     <div class="header-subtitle">
@@ -241,18 +250,22 @@ return `
 
     <span>${room}</span>
 
-    <input type="text" placeholder="Name" style="width:60px;">
+    <div class="controls">
 
-    <select>
-        ${Array.from({length: maxDevices}, (_, i) => {
-            const v = maxDevices - i;
-            return `<option value="${v}">${v}</option>`;
-        }).join("")}
-    </select>
+        <input type="text" placeholder="Name">
 
-    <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
-        ✓
-    </button>
+        <select>
+            ${Array.from({length: room === "Room 12" ? 32 : 15}, (_, i) => {
+                const v = (room === "Room 12" ? 32 : 15) - i;
+                return `<option value="${v}">${v}</option>`;
+            }).join("")}
+        </select>
+
+        <button onclick="confirmBooking(this, ${week}, '${day}', ${period}, '${room}')">
+            ✓
+        </button>
+
+    </div>
 
 </div>
 `;
