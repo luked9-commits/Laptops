@@ -173,7 +173,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.13</span>
+        <span class="version">v5.14</span>
     </div>
 
     <div class="header-subtitle">
@@ -237,14 +237,18 @@ function confirmBooking(btn, week, day, period, room) {
     if (cell.dataset.confirmed === "true") return;
     cell.dataset.confirmed = "true";
 
-    cell.innerHTML = `
-        <div class="locked">
-            <span>${room} - ${name} - ${qty} devices</span>
+    // update local state first
+bookings.push({
+    week: Number(week),
+    day,
+    period: Number(period),
+    room,
+    name,
+    quantity: Number(qty)
+});
 
-            <button class="delete-btn"
-                onclick="deleteBooking('${week}','${day}','${period}','${room}')">✕</button>
-        </div>
-    `;
+// re-render table so UI matches backend version
+createTable();
 
     bookings.push({
         week: Number(week),
