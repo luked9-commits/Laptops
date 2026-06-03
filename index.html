@@ -119,7 +119,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v4.91</span>
+        <span class="version">v4.92</span>
     </div>
 
     <div class="header-subtitle">
@@ -323,9 +323,9 @@ function createTable() {
             for (let day of days) {
                 html += `
                     <td class="day-cell">
-    ${createCell(week, day, period, "13")}
-    ${createCell(week, day, period, "18")}
-    ${createCell(week, day, period, "20")}
+    ${createCell(week, day, period, "Room 13")}
+${createCell(week, day, period, "Room 18")}
+${createCell(week, day, period, "Room 20")}
 </td>
                 `;
             }
