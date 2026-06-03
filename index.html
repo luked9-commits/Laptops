@@ -197,7 +197,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.16</span>
+        <span class="version">v5.17</span>
     </div>
 
     <div class="header-subtitle">
@@ -215,7 +215,36 @@ select, input {
 
     <span id="currentUserDisplay" style="margin-left:10px;"></span>
 </div>
+    
+/* ---------------- POPUP ---------------- */
+    
+<div id="updatePopup" style="
+    display:none;
+    position:fixed;
+    top:20px;
+    right:20px;
+    width:300px;
+    background:white;
+    border:1px solid #ccc;
+    border-radius:8px;
+    padding:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    z-index:9999;
+    font-size:14px;
+">
+    <h3 style="margin-top:0;">System Updates</h3>
 
+    <ul style="padding-left:18px;">
+        <li>Added 'user' login, mostly artificial and saved on local storage - no data harvesting I promise. You set your name, and forget.</li>
+        <li>As a result, removed input of names during booking</li>
+        <li>Improved minimisation of prior weeks</li>
+    </ul>
+
+    <button onclick="closeUpdatePopup()">
+        Got it
+    </button>
+</div>
+    
 <div id="app">Loading...</div>
 
 <script>
@@ -346,6 +375,26 @@ return `
 `;
 }
 
+    /* ---------------- POPUP FUNCTION ---------------- */
+    
+    const CURRENT_VERSION = "5.17";
+
+function checkForUpdates() {
+
+    const seenVersion = localStorage.getItem("seenVersion");
+
+    if (seenVersion !== CURRENT_VERSION) {
+
+        document.getElementById("updatePopup").style.display = "block";
+    }
+}
+
+function closeUpdatePopup() {
+
+    localStorage.setItem("seenVersion", CURRENT_VERSION);
+
+    document.getElementById("updatePopup").style.display = "none";
+}
 
 /* ---------------- WEEK SETTINGS ---------------- */
 function isWeekCollapsed(week) {
@@ -462,8 +511,12 @@ ${createCell(week, day, period, "Room 12")}
 /* ---------------- INIT ---------------- */
 async function init() {
     await loadBookings();
+
     updateUserDisplay();
+
     createTable();
+
+    checkForUpdates();
 }
 
 window.onload = init;
