@@ -10,6 +10,9 @@ body {
     margin: 20px;
 }
 
+/* =========================
+   HEADER
+========================= */
 .header {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
@@ -35,6 +38,9 @@ body {
     margin-top: 4px;
 }
 
+/* =========================
+   TABLE
+========================= */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -52,27 +58,71 @@ th {
     background: #f7f7f7;
 }
 
-.locked {
-    background: #d4edda;
-    padding: 4px;
-    border-radius: 4px;
-    font-size: 11px;
-    position: relative;
-}
-    .controls {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-}
-    .locked {
-    text-align: center;
-    line-height: 1.4;
+.day-cell {
+    vertical-align: top;
 }
 
+/* =========================
+   BOOKING ROW (INPUT STATE)
+========================= */
+.room-row {
+    display: inline-grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 4px;
+    padding: 4px;
+    margin-bottom: 4px;
+
+    font-size: 10px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+
+    max-width: 220px;
+    align-items: center;
+}
+
+.room-row input,
+.room-row select {
+    width: 100%;
+    font-size: 10px;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.controls {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+/* confirm button */
+.controls button {
+    width: 40px;
+    flex-shrink: 0;
+    font-weight: bold;
+}
+
+/* =========================
+   CONFIRMED BOOKING STATE
+========================= */
+.locked {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 4px 6px;
+    background: #d4edda;
+    border-radius: 4px;
+
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+/* delete button */
 .delete-btn {
     position: absolute;
     top: 2px;
     right: 4px;
+
     border: none;
     background: transparent;
     color: red;
@@ -84,68 +134,9 @@ th {
     opacity: 1;
 }
 
-.cell-box {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    align-items: center;
-
-}
-select, input {
-    font-size: 11px;
-    padding: 2px;
-}
-    .day-cell {
-    vertical-align: top;
-}
-
-.room-row {
-    display: grid;
-    grid-template-columns: 60px 1fr auto;
-    gap: 4px;
-    padding: 4px;
-    font-size: 10px;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    margin-bottom: 4px;
-    align-items: center;
-}
-    .controls button {
-    width: 50px;
-    font-weight: bold;
-}
-    .room-row {
-    max-width: 220px;
-}
-    .room-row {
-    display: inline-grid;
-}
-    
-.room-row input,
-.room-row select {
-    width: 100%;
-    font-size: 10px;
-    box-sizing: border-box;
-}
-
-.locked {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px;
-    background: #d4edda;
-    border-radius: 4px;
-}
-
-select, input {
-    font-size: 11px;
-    padding: 2px;
-}
-
-.day-cell {
-    vertical-align: top;
-}
-
+/* =========================
+   WEEK UI
+========================= */
 .week-summary {
     background: #f1f1f1;
     padding: 6px;
@@ -153,18 +144,13 @@ select, input {
     font-weight: bold;
     margin-top: 10px;
 }
-    .controls {
-    display: flex;
-    gap: 3px;
-    align-items: center;
-    flex-wrap: nowrap;
-}
-    .room-row input {
-    min-width: 0;
-}
-    .controls button {
-    flex-shrink: 0;
-    width: 40px;
+
+/* =========================
+   FORM ELEMENTS (GLOBAL)
+========================= */
+select, input {
+    font-size: 11px;
+    padding: 2px;
 }
 </style>
 </head>
@@ -174,7 +160,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.01</span>
+        <span class="version">v5.02</span>
     </div>
 
     <div class="header-subtitle">
