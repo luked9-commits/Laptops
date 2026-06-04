@@ -197,11 +197,28 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.19</span>
+        <span class="version">v5.20</span>
     </div>
 
     <div class="header-subtitle">
         Currently 15 devices each in rooms 18 and 13, and 32~ in room 12
+    </div>
+
+    <div id="currentUserArea" style="
+        margin-top:8px;
+        font-size:12px;
+        opacity:0.9;
+    ">
+        <span id="currentUserDisplay"></span>
+
+        <button onclick="changeUser()" style="
+            margin-left:8px;
+            font-size:10px;
+            padding:1px 6px;
+            cursor:pointer;
+        ">
+            Change User
+        </button>
     </div>
 
     <div class="header-link">
@@ -228,7 +245,7 @@ select, input {
     <ul style="padding-left:18px;">
         <li>Added 'user' login, saved on your end - no data harvesting I promise. You set your name, and forget.</li>
         <li>As a result, removed input of names during booking</li>
-        <li>Resolved some user error with an actual login screen</li>
+        <li>Resolved some user error with an actual login screen + allow for change of user</li>
         <li>Improved minimisation of prior weeks</li>
     </ul>
 
@@ -250,10 +267,7 @@ select, input {
 <div id="mainApp" style="display:none;">
     <div id="app"></div>
 </div>
-    
-<div id="mainApp" style="display:none;">
-    <div id="app">Loading...</div>
-</div>
+
 
 <script>
     
@@ -385,7 +399,7 @@ return `
 
     /* ---------------- POPUP FUNCTION ---------------- */
     
-    const CURRENT_VERSION = "5.19";
+    const CURRENT_VERSION = "5.20";
 
 function checkForUpdates() {
 
@@ -447,6 +461,15 @@ function deleteBooking(week, day, period, room) {
     });
 }
 
+/* ---------------- CHANGE USER ---------------- */
+function changeUser() {
+
+    localStorage.removeItem("laptopUser");
+
+    currentUser = "";
+
+    location.reload();
+}
 /* ---------------- CREATE USER ---------------- */
 function setUser() {
 
