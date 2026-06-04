@@ -197,7 +197,7 @@ select, input {
 <div class="header">
     <div class="header-title">
         Secret Laptop Booking System
-        <span class="version">v5.18</span>
+        <span class="version">v5.19</span>
     </div>
 
     <div class="header-subtitle">
@@ -226,7 +226,7 @@ select, input {
     <h3 style="margin-top:0;">System Updates</h3>
 
     <ul style="padding-left:18px;">
-        <li>Added 'user' login, mostly artificial and saved on local storage - no data harvesting I promise. You set your name, and forget.</li>
+        <li>Added 'user' login, saved on your end - no data harvesting I promise. You set your name, and forget.</li>
         <li>As a result, removed input of names during booking</li>
         <li>Resolved some user error with an actual login screen</li>
         <li>Improved minimisation of prior weeks</li>
@@ -237,17 +237,18 @@ select, input {
     </button>
 </div>
 
-<div id="loginScreen" style="
-    text-align:center;
-    margin-top:40px;
-">
+<div id="loadingScreen" style="margin-top:40px; text-align:center;">
+    Loading...
+</div>
+
+<div id="loginScreen" style="display:none; text-align:center; margin-top:40px;">
     <h2>Enter Your Name</h2>
-
     <input id="userInput" placeholder="Your name">
+    <button onclick="setUser()">Continue</button>
+</div>
 
-    <button onclick="setUser()">
-        Continue
-    </button>
+<div id="mainApp" style="display:none;">
+    <div id="app"></div>
 </div>
     
 <div id="mainApp" style="display:none;">
@@ -384,7 +385,7 @@ return `
 
     /* ---------------- POPUP FUNCTION ---------------- */
     
-    const CURRENT_VERSION = "5.18";
+    const CURRENT_VERSION = "5.19";
 
 function checkForUpdates() {
 
@@ -530,13 +531,29 @@ async function init() {
 
     await loadBookings();
 
-    createTable();
+    const savedUser = localStorage.getItem("laptopUser");
+
+    currentUser = savedUser || "";
+
+    document.getElementById("loadingScreen").style.display = "none";
 
     if (currentUser) {
         showMainApp();
+    } else {
+        document.getElementById("loginScreen").style.display = "block";
     }
 
     checkForUpdates();
+}
+    function showMainApp() {
+
+    document.getElementById("loginScreen").style.display = "none";
+
+    document.getElementById("mainApp").style.display = "block";
+
+    updateUserDisplay();
+
+    createTable();
 }
 
 window.onload = init;
